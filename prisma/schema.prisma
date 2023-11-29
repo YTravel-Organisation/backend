@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,11 +7,270 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model LoyaltyProgram {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  programName   Int?
+  promotion     BigInt?
+  promotionCode String?
+  user          User    @relation(fields: [userId], references: [id])
+
+  @@map("loyalty_programs")
+}
+
+model Role {
+  id                  Int       @id @default(autoincrement())
+  name                String
+  description         String
+  privilegeLevel      Int
+  status              Boolean   @default(true)
+  modificationHistory String?
+  createdAt           DateTime? @default(now())
+  users               User[]
+
+  @@map("roles")
+}
+
+model Room {
+  id                Int               @id @default(autoincrement())
+  hotelId           Int
+  roomType          String
+  description       String
+  viewType          String
+  maxOccupancy      Int
+  pricePerNight     Decimal
+  options           String?
+  images            String
+  hotel             Hotel?            @relation(fields: [hotelId], references: [id])
+  propertyAmenities PropertyAmenity[]
+  availabilities    Availability[]
+  reservations      Reservation[]
+  comments          Comment[]
+
+  @@map("rooms")
+}
+
+model Event {
+  id            Int           @id @default(autoincrement())
+  hotelId       Int?
+  name          String
+  description   String
+  price         Decimal
+  eventTypes    String
+  longitude     Decimal
+  latitude      Decimal
+  maxCapacity   Int
+  organizerName String
+  startDate     DateTime
+  endDate       DateTime
+  hotel         Hotel?        @relation(fields: [hotelId], references: [id])
+  reservations  Reservation[]
+  comments      Comment[]
+
+  @@map("events")
+}
+
+model Reservation {
+  id                Int            @id @default(autoincrement())
+  bookingType       String
+  userId            Int
+  roomId            Int?
+  paymentId         Int?
+  eventId           Int?
+  transportId       Int?
+  startDate         DateTime
+  endDate           DateTime
+  reservationStatus String
+  specialRequest    String?
+  uniqueBookingCode String
+  internalNotes     String?
+  createdAt         DateTime?      @default(now())
+  user              User           @relation(fields: [userId], references: [id])
+  room              Room?          @relation(fields: [roomId], references: [id])
+  payment           Payment?       @relation(fields: [paymentId], references: [id])
+  event             Event?         @relation(fields: [eventId], references: [id])
+  transport         Transport?     @relation(fields: [transportId], references: [id])
+  availabilities    Availability[]
+
+  @@map("reservations")
+}
+
+model Transport {
+  id              Int           @id @default(autoincrement())
+  transportType   String
+  price           BigInt
+  travelTime      DateTime
+  departure       String
+  arrival         String
+  occupancy       Int
+  distance        BigInt
+  enterprise      String
+  reservationLink String
+  startDate       DateTime
+  endDate         DateTime
+  reservations    Reservation[]
+
+  @@map("transports")
+}
+
+model PropertyAmenity {
+  id            Int     @id @default(autoincrement())
+  roomId        Int
+  kitchen       Boolean
+  bathroom      BigInt
+  bed           Json
+  communication String
+  accessible    Boolean
+  balcony       Boolean
+  parking       Boolean
+  locality      String?
+  other         String?
+  room          Room    @relation(fields: [roomId], references: [id])
+
+  @@map("property_amenities")
+}
+
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                Int              @id @default(autoincrement())
+  roleId            Int?
+  username          String
+  email             String
+  password          String
+  verified          Boolean          @default(false)
+  verificationToken String?
+  createdAt         DateTime         @default(now())
+  role              Role?            @relation(fields: [roleId], references: [id])
+  loyaltyPrograms   LoyaltyProgram[]
+  notifications     Notification[]
+  comments          Comment[]
+  payments          Payment[]
+  profiles          Profile[]
+  reservations      Reservation[]
+  logs              Log[]
+  hotels            Hotel[]
+
+  @@map("users")
+}
+
+model Availability {
+  id            Int         @id @default(autoincrement())
+  roomId        Int
+  reservationId Int
+  startDate     DateTime
+  endDate       DateTime
+  status        String
+  createdAt     DateTime?   @default(now())
+  room          Room        @relation(fields: [roomId], references: [id])
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+
+  @@map("availabilities")
+}
+
+model Notification {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  type      String
+  title     String
+  message   String
+  createdAt DateTime? @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  roomId    Int?
+  hotelId   Int?
+  eventId   Int?
+  message   String
+  rate      Int
+  status    Boolean   @default(true)
+  createdAt DateTime? @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+  room      Room?     @relation(fields: [roomId], references: [id])
+  hotel     Hotel?    @relation(fields: [hotelId], references: [id])
+  event     Event?    @relation(fields: [eventId], references: [id])
+
+  @@map("comments")
+}
+
+model Profile {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  gender       String
+  firstName    String
+  lastName     String
+  profileImage String?
+  phone        String
+  addressLine  String
+  state        String?
+  city         String
+  postalCode   BigInt
+  country      String
+  dateOfBirth  DateTime
+  lastSearch   String?  @default("[]")
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("profiles")
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  reservationId Int
+  methodPayment String
+  multiple      Boolean       @default(false)
+  amount        Decimal
+  currency      String
+  status        String
+  createdAt     DateTime?     @default(now())
+  user          User          @relation(fields: [userId], references: [id])
+  reservation   Reservation[]
+
+  @@map("payments")
+}
+
+model Hotel {
+  id               Int       @id @default(autoincrement())
+  userId           Int
+  name             String
+  description      String
+  address          String
+  email            String
+  website          String?
+  phoneNumber      String
+  rating           Decimal
+  verified         Boolean   @default(false)
+  commentsId       String?   @default("[]")
+  bannerImage      String
+  suppImage        String?   @default("[]")
+  longitude        Decimal
+  latitude         Decimal
+  faq              String?   @default("[]")
+  paymentMethod    String
+  otherInformation String?   @default("[]")
+  rooms            Room[]
+  events           Event[]
+  user             User?     @relation(fields: [userId], references: [id])
+  comments         Comment[]
+
+  @@map("hotels")
+}
+
+model Log {
+  id             Int      @id @default(autoincrement())
+  timestamp      DateTime
+  userId         Int
+  eventType      String
+  description    String
+  severity       String
+  ipAddress      String
+  userAgent      String
+  endpoint       String
+  additionalData String
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@map("logs")
 }
