@@ -1,73 +1,75 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# YTravel Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Le backend de YTravel est une API moderne et efficace construite avec [NestJS](https://nestjs.com/) et [Apollo GraphQL](https://www.apollographql.com/). Elle fournit une plateforme complète pour la réservation d'hôtels, d'activités, de transports et une gestion intégrée pour les établissements hôteliers.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Fonctionnalités
 
-## Description
+- **Recherche Intelligente**: Utilisant le traitement du langage naturel pour interpréter les demandes complexes.
+- **Gestion des Comptes**: Comprend des abonnements, un système de fidélité et des types de comptes spéciaux.
+- **Réservation et Gestion d'Hébergement**: Inclut la vérification d'établissements, des suggestions d'activités locales et un processus de check-in en ligne.
+- **Gestion Interne pour Hôtels**: Offre des outils pour la planification du personnel, la gestion des stocks et la maintenance.
+- **Sécurité**: Authentification robuste, autorisations granulaires et chiffrement des données.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Démarrage rapide
 
-## Installation
+Pour lancer le projet localement, suivez les étapes ci-dessous :
 
 ```bash
-$ npm install
+# Clonez le dépôt
+git clone https://github.com/votre-utilisateur/YTravel-backend.git
+
+# Allez dans le répertoire du projet
+cd YTravel-backend
+
+# Installez les dépendances
+npm install
+
+# Lancez le serveur de développement
+npm run start:dev
 ```
 
-## Running the app
+## Structure du projet
+
+Le backend est structuré en modules reflétant les différentes entités de la base de données :
+
+- `comments/`
+- `events/`
+- `hotels/`
+- `notifications/`
+- `payments/`
+- `reservations/`
+- `roles/`
+- `rooms/`
+- `users/`
+
+Chaque module contient les fichiers de service, resolver, et le cas échéant, les DTOs pour la communication avec GraphQL.
+
+## Documentation de l'API
+
+Une fois le serveur en cours d'exécution, accédez à `http://localhost:3000/graphql` pour explorer l'API avec Apollo Studio.
+
+## Tests
+
+Pour exécuter les tests :
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run test
 ```
 
-## Test
+Pour les tests de couverture :
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test:cov
 ```
 
-## Support
+## Licence
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` (à créer) pour plus de détails.
 
-## Stay in touch
+## Contact
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- [YTravel](mailto:contact@ytravel.com)
 
-## License
+---
 
-Nest is [MIT licensed](LICENSE).
+© 2023 YTravel, Inc. Tous droits réservés.
