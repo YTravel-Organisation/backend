@@ -10,7 +10,7 @@ datasource db {
 model LoyaltyProgram {
   id            Int     @id @default(autoincrement())
   userId        Int
-  programName   Int?
+  programName   Program    @default(BASIC)
   promotion     BigInt?
   promotionCode String?
   user          User    @relation(fields: [userId], references: [id])
@@ -34,13 +34,13 @@ model Role {
 model Room {
   id                Int               @id @default(autoincrement())
   hotelId           Int
-  roomType          String
+  roomType          RoomType
   description       String
   viewType          String
   maxOccupancy      Int
   pricePerNight     Decimal
-  options           String?
-  images            String
+  options           String[]
+  images            String[]
   hotel             Hotel?            @relation(fields: [hotelId], references: [id])
   propertyAmenities PropertyAmenity[]
   availabilities    Availability[]
@@ -56,7 +56,7 @@ model Event {
   name          String
   description   String
   price         Decimal
-  eventTypes    String
+  eventTypes    String[]
   longitude     Decimal
   latitude      Decimal
   maxCapacity   Int
@@ -72,7 +72,7 @@ model Event {
 
 model Reservation {
   id                Int            @id @default(autoincrement())
-  bookingType       String
+  bookingType       BookingType
   userId            Int
   roomId            Int?
   paymentId         Int?
@@ -80,7 +80,7 @@ model Reservation {
   transportId       Int?
   startDate         DateTime
   endDate           DateTime
-  reservationStatus String
+  reservationStatus ReservationStatus
   specialRequest    String?
   uniqueBookingCode String
   internalNotes     String?
@@ -97,7 +97,7 @@ model Reservation {
 
 model Transport {
   id              Int           @id @default(autoincrement())
-  transportType   String
+  transportType   TransportType
   price           BigInt
   travelTime      DateTime
   departure       String
@@ -118,13 +118,13 @@ model PropertyAmenity {
   roomId        Int
   kitchen       Boolean
   bathroom      BigInt
-  bed           Json
+  bed           String[]
   communication String
   accessible    Boolean
   balcony       Boolean
   parking       Boolean
-  locality      String?
-  other         String?
+  locality      String[]
+  other         String[]
   room          Room    @relation(fields: [roomId], references: [id])
 
   @@map("property_amenities")
@@ -158,7 +158,7 @@ model Availability {
   reservationId Int
   startDate     DateTime
   endDate       DateTime
-  status        String
+  status        AvailabilityStatus
   createdAt     DateTime?   @default(now())
   room          Room        @relation(fields: [roomId], references: [id])
   reservation   Reservation @relation(fields: [reservationId], references: [id])
@@ -169,7 +169,7 @@ model Availability {
 model Notification {
   id        Int       @id @default(autoincrement())
   userId    Int
-  type      String
+  type      NotificationType
   title     String
   message   String
   createdAt DateTime? @default(now())
@@ -199,7 +199,7 @@ model Comment {
 model Profile {
   id           Int      @id @default(autoincrement())
   userId       Int
-  gender       String
+  gender       Gender
   firstName    String
   lastName     String
   profileImage String?
@@ -210,7 +210,7 @@ model Profile {
   postalCode   BigInt
   country      String
   dateOfBirth  DateTime
-  lastSearch   String?  @default("[]")
+  lastSearch   String[]
   user         User     @relation(fields: [userId], references: [id])
 
   @@map("profiles")
@@ -220,11 +220,11 @@ model Payment {
   id            Int           @id @default(autoincrement())
   userId        Int
   reservationId Int
-  methodPayment String
+  methodPayment MethodPayment
   multiple      Boolean       @default(false)
   amount        Decimal
   currency      String
-  status        String
+  status        PaymentStatus @default(PENDING)
   createdAt     DateTime?     @default(now())
   user          User          @relation(fields: [userId], references: [id])
   reservation   Reservation[]
@@ -243,14 +243,14 @@ model Hotel {
   phoneNumber      String
   rating           Decimal
   verified         Boolean   @default(false)
-  commentsId       String?   @default("[]")
+  commentsId       Int[]
   bannerImage      String
-  suppImage        String?   @default("[]")
+  suppImage        String[]
   longitude        Decimal
   latitude         Decimal
-  faq              String?   @default("[]")
-  paymentMethod    String
-  otherInformation String?   @default("[]")
+  faq              String[]
+  paymentMethod    MethodPayment
+  otherInformation String[]
   rooms            Room[]
   events           Event[]
   user             User?     @relation(fields: [userId], references: [id])
@@ -263,7 +263,7 @@ model Log {
   id             Int      @id @default(autoincrement())
   timestamp      DateTime
   userId         Int
-  eventType      String
+  eventType      LogsType
   description    String
   severity       String
   ipAddress      String
@@ -273,4 +273,93 @@ model Log {
   user           User     @relation(fields: [userId], references: [id])
 
   @@map("logs")
+}
+
+enum LogsType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
+}
+
+enum MethodPayment {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  BITCOIN
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+enum Gender {
+  MAN
+  FEMALE
+  OTHER
+}
+
+enum Program {
+  BASIC
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum RoomType {
+  SINGLE
+  DOUBLE
+  TRIPLE
+  QUAD
+  QUEEN
+  KING
+  TWIN
+  DOUBLE_DOUBLE
+  STUDIO
+  MASTER_SUITE
+  MINI_SUITE
+  CONNECTING_ROOMS
+  ADJOINING_ROOMS
+  ADJACENT_ROOMS
+}
+
+enum BookingType {
+  ROOM
+  EVENT
+  TRANSPORT
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum TransportType {
+  BUS
+  TRAIN
+  FLIGHT
+  SHIP
+  FEET
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  UNAVAILABLE
+  CANCELLED
+  VALIDATED
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  SUCCESS
 }

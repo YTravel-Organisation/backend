@@ -12,8 +12,8 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 // import { ReservationsModule } from './reservations/reservations.module';
 // import { RolesModule } from './roles/roles.module';
 // import { RoomsModule } from './rooms/rooms.module';
-import { UsersModule } from './modules/users/users.module';
-import { UsersService } from './modules/users/users.service';
+import { UserModule } from './modules/users/users.module';
+import { UserService } from './modules/users/users.service';
 
 @Module({
   imports: [
@@ -43,9 +43,9 @@ import { UsersService } from './modules/users/users.service';
     // ReservationsModule,
     // RolesModule,
     // RoomsModule,
-    UsersModule,
+    UserModule,
   ],
   controllers: [],
-  providers: [UsersService],
+  providers: [UserService],
 })
 export class AppModule {}
