@@ -1,75 +1,64 @@
-# YTravel Backend
+<h1 align="center" id="title">Backend - Ytravel</h1>
 
-Le backend de YTravel est une API moderne et efficace construite avec [NestJS](https://nestjs.com/) et [Apollo GraphQL](https://www.apollographql.com/). Elle fournit une plateforme complète pour la réservation d'hôtels, d'activités, de transports et une gestion intégrée pour les établissements hôteliers.
+<p align="center"><img src="" alt="project-image"></p>
 
-## Fonctionnalités
+<p id="description">Le projet YTravel est une plateforme innovante conçue pour révolutionner l'expérience de réservation dans l'industrie du voyage et de l'hôtellerie. Elle offre une solution tout-en-un permettant aux utilisateurs de rechercher comparer et réserver des hôtels des moyens de transport et des activités à partir d'une interface unique. Pour les hôteliers YTravel fournit des outils de gestion avancés pour optimiser leurs opérations gérer les réservations et améliorer la satisfaction clientèle.</p>
 
-- **Recherche Intelligente**: Utilisant le traitement du langage naturel pour interpréter les demandes complexes.
-- **Gestion des Comptes**: Comprend des abonnements, un système de fidélité et des types de comptes spéciaux.
-- **Réservation et Gestion d'Hébergement**: Inclut la vérification d'établissements, des suggestions d'activités locales et un processus de check-in en ligne.
-- **Gestion Interne pour Hôtels**: Offre des outils pour la planification du personnel, la gestion des stocks et la maintenance.
-- **Sécurité**: Authentification robuste, autorisations granulaires et chiffrement des données.
+<p align="center"><img src="https://img.shields.io/codecov/c/github/YTravel-Organisation/backend" alt="shields"><img src="https://img.shields.io/github/license/YTravel-Organisation/backend" alt="shields"><img src="https://img.shields.io/github/package-json/v/YTravel-Organisation/backend/main" alt="shields"><img src="https://img.shields.io/github/commit-activity/y/YTravel-Organisation/backend" alt="shields"></p>
 
-## Démarrage rapide
+<h2>🚀 Demo</h2>
 
-Pour lancer le projet localement, suivez les étapes ci-dessous :
+[http://Ytravel.com/demo](http://Ytravel.com/demo)
 
-```bash
-# Clonez le dépôt
-git clone https://github.com/votre-utilisateur/YTravel-backend.git
+<h2>🧐 Features</h2>
 
-# Allez dans le répertoire du projet
-cd YTravel-backend
+Here're some of the project's best features:
 
-# Installez les dépendances
-npm install
+*   Recherche et Filtrage Intelligents : Utilise le traitement du langage naturel pour permettre aux utilisateurs de faire des recherches complexes avec des options de filtrage avancées comme le prix les équipements et les avis.
+*   Sélection de Transport : Offre aux utilisateurs la possibilité de choisir différents modes de transport (avion train voiture) avec des options de classe de voyage et l'affichage de l'empreinte carbone.
+*   Gestion de Comptes : Propose des abonnements payants pour hôtels et utilisateurs un système de fidélité et différents types de comptes (étudiant séminaire etc.).
+*   Réservation et Gestion d'Hébergement : Permet la vérification d'établissements via des API la suggestion d'activités locales et une gestion en ligne des disponibilités et des chambres.
+*   Réservation / Gestion de Prestations et Activités : Un catalogue complet d'activités locales avec personnalisation de forfaits réservation en ligne et intégration de partenaires externes.
+*   Gestion Interne pour Hôteliers : Comprend la planification du personnel la gestion des stocks la maintenance de l'hôtel et la gestion des chambres d'hôtel avec visualisation 3D.
 
-# Lancez le serveur de développement
-npm run start:dev
+<h2>🛠️ Installation Steps:</h2>
+
+<p>1. Clonage du dépot du projet</p>
+
+```
+git clone https://github.com/YTravel-Organisation/backend
 ```
 
-## Structure du projet
+<p>2. Accédez au répertoire du projet</p>
 
-Le backend est structuré en modules reflétant les différentes entités de la base de données :
-
-- `comments/`
-- `events/`
-- `hotels/`
-- `notifications/`
-- `payments/`
-- `reservations/`
-- `roles/`
-- `rooms/`
-- `users/`
-
-Chaque module contient les fichiers de service, resolver, et le cas échéant, les DTOs pour la communication avec GraphQL.
-
-## Documentation de l'API
-
-Une fois le serveur en cours d'exécution, accédez à `http://localhost:3000/graphql` pour explorer l'API avec Apollo Studio.
-
-## Tests
-
-Pour exécuter les tests :
-
-```bash
-npm run test
+```
+cd ./backend
 ```
 
-Pour les tests de couverture :
+<p>3. Construction du docker</p>
 
-```bash
-npm run test:cov
+```
+docker-composer up -d
 ```
 
-## Licence
+<p>4. Accès au projet</p>
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` (à créer) pour plus de détails.
+```
+http://localhost:3000
+```
 
-## Contact
+  
+  
+<h2>💻 Built with</h2>
 
-- [YTravel](mailto:contact@ytravel.com)
+Technologies used in the project:
 
----
+*   NestJS
+*   Postgres
+*   Prisma
+*   MailerJS
+*   Docker
 
-© 2023 YTravel, Inc. Tous droits réservés.
+<h2>🛡️ License:</h2>
+
+This project is licensed under the MIT
