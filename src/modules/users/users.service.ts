@@ -39,4 +39,22 @@ export class UserService {
   async remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
   }
+
+  async findOneByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async verifyEmailToken(token: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { verificationToken: token },
+    });
+    if (!user) {
+      return 'VerificationFailed';
+    }
+    await this.prisma.user.update({
+      where: { verificationToken: token },
+      data: { verified: true, verificationToken: null },
+    });
+    return 'VerificationSucceeded';
+  }
 }
