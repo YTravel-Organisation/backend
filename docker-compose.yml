@@ -38,6 +38,51 @@ services:
     networks:
       - ytravel-network
 
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - ytravel-network
+    depends_on:
+      - postgres
+      - redis
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - ytravel-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - ytravel-network
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - "3001:3000"
+    networks:
+      - ytravel-network
+    depends_on:
+      - prometheus
+
 networks:
   ytravel-network:
     driver: bridge
@@ -45,3 +90,4 @@ networks:
 volumes:
   postgres_data:
   redis_data:
+  grafana_data:
