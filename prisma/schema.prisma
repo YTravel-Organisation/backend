@@ -134,10 +134,10 @@ model User {
   id                Int              @id @default(autoincrement())
   roleId            Int?
   username          String
-  email             String
+  email             String           @unique
   password          String
   verified          Boolean          @default(false)
-  verificationToken String?
+  verificationToken String?          @unique
   createdAt         DateTime         @default(now())
   role              Role?            @relation(fields: [roleId], references: [id])
   loyaltyPrograms   LoyaltyProgram[]
