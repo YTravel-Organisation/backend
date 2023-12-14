@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { register } from 'prom-client';
 
 dotenv.config();
 
@@ -23,6 +24,12 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.use('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  });
+
   await app.listen(3000);
 }
 bootstrap();
