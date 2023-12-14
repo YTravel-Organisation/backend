@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../tools/database.config';
 import { EmailService } from '../email/email.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -39,30 +39,48 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return this.prisma.user.update({ where: { id }, data: updateUserDto });
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    await this.prisma.user.update({ where: { id }, data: updateUserDto });
+    return 'UserUpdated';
   }
 
   async remove(id: number) {
-    return this.prisma.user.delete({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    await this.prisma.user.delete({ where: { id } });
+    return 'UserDeleted';
   }
 
   async findOneByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    return user;
   }
 
   async verifyEmailToken(token: string) {
     if (!token) {
-      return 'VerificationFailed';
+      throw new NotFoundException("Token doesn't exist");
     }
     const user = await this.prisma.user.findUnique({
       where: { verificationToken: token },
     });
     if (!user) {
-      return 'VerificationFailed';
+      throw new NotFoundException("User doesn't exist");
     }
     await this.prisma.user.update({
       where: { id: user.id },
