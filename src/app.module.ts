@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaModule } from './tools/prisma.module';
 import RedisConfig from './tools/redis.config';
@@ -15,6 +15,7 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 import { UserModule } from './modules/users/users.module';
 import { UserService } from './modules/users/users.service';
 import { EmailModule } from './modules/email/email.module';
+import { PrometheusMiddleware } from './middleware/prometheus.middleware';
 
 @Module({
   imports: [
@@ -50,4 +51,8 @@ import { EmailModule } from './modules/email/email.module';
   controllers: [],
   providers: [UserService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(PrometheusMiddleware).forRoutes('*');
+  }
+}
