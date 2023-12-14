@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Query,
+  Patch,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UserService } from './users.service';
@@ -25,10 +26,31 @@ export class UserController {
     }
   }
 
+  @Post('forgot-password')
+  async forgotPassword(@Body('email') email: string) {
+    try {
+      return await this.userService.forgotPassword(email);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   @Get('verify-email')
   async verifyEmail(@Query('token') token: string) {
     try {
       return await this.userService.verifyEmailToken(token);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Get('search')
+  search(@Query('') queryParams: any) {
+    try {
+      const page = queryParams.page ? +queryParams.page : 1;
+      const limit = queryParams.limit ? +queryParams.limit : 10;
+      const skip = (page - 1) * limit;
+      return this.userService.search(queryParams, skip, limit);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -56,6 +78,18 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
       return this.userService.update(+id, updateUserDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Patch('reset-password/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body('password') password: string,
+  ) {
+    try {
+      return await this.userService.resetPassword(token, password);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

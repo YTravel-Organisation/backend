@@ -12,6 +12,7 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 // import { ReservationsModule } from './reservations/reservations.module';
 // import { RolesModule } from './roles/roles.module';
 // import { RoomsModule } from './rooms/rooms.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/users/users.module';
 import { UserService } from './modules/users/users.service';
 import { EmailModule } from './modules/email/email.module';
@@ -45,6 +46,7 @@ import { PrometheusMiddleware } from './middleware/prometheus.middleware';
     // ReservationsModule,
     // RolesModule,
     // RoomsModule,
+    AuthModule,
     EmailModule,
     UserModule,
   ],

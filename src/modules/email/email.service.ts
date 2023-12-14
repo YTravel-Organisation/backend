@@ -26,4 +26,18 @@ export class EmailService {
 
     console.log('Message sent: %s', info.messageId);
   }
+
+  async sendForgotPasswordEmail(to: string, token: string) {
+    const subject = 'Forgot Password';
+    const text = `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant: http://localhost:3000/users/reset-password?token=${token}`;
+
+    const info = await this.transporter.sendMail({
+      from: 'no-reply@ytravel.com',
+      to: to,
+      subject: subject,
+      text: text,
+    });
+
+    console.log('Message sent: %s', info.messageId);
+  }
 }
