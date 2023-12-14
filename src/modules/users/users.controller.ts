@@ -20,6 +20,11 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    return this.userService.verifyEmailToken(token);
+  }
+
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -38,10 +43,5 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
-  }
-
-  @Get('verify-email')
-  async verifyEmail(@Query('token') token: string) {
-    return this.userService.verifyEmailToken(token);
   }
 }
