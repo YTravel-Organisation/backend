@@ -3,12 +3,21 @@ version: '3.8'
 services:
   postgres:
     image: postgres:latest
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_USER: ytravel_db_user
       POSTGRES_PASSWORD: ytravel_db_password
       POSTGRES_DB: YTravel
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -16,8 +25,13 @@ services:
 
   redis:
     image: redis:latest
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
@@ -32,28 +46,53 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5050:80"
+      - '5050:80'
     depends_on:
       - postgres
     networks:
       - ytravel-network
 
-  app:
-    build: .
+  rabbitmq:
+    image: rabbitmq:3-management
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5672']
     ports:
-      - "3000:3000"
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - ytravel-network
+
+  ytravel:
+    build:
+      context: .
+      dockerfile: apps/ytravel-backend/Dockerfile
+    ports:
+      - '3000:3000'
     networks:
       - ytravel-network
     depends_on:
       - postgres
       - redis
+      - rabbitmq
+
+  smtp-services:
+    build:
+      context: .
+      dockerfile: apps/smtp/Dockerfile
+
+    networks:
+      - ytravel-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
 
   mailhog:
     image: mailhog/mailhog:latest
-    container_name: "mailhog"
+    container_name: 'mailhog'
     ports:
-      - "8025:8025"
-      - "1025:1025"
+      - '8025:8025'
+      - '1025:1025'
     networks:
       - ytravel-network
 
@@ -62,7 +101,7 @@ services:
     volumes:
       - ./prometheus:/etc/prometheus
     ports:
-      - "9090:9090"
+      - '9090:9090'
     networks:
       - ytravel-network
     depends_on:
@@ -75,9 +114,9 @@ services:
   postgres-exporter:
     image: wrouesnel/postgres_exporter:latest
     environment:
-      DATA_SOURCE_NAME: "user=ytravel_db_user password=ytravel_db_password host=postgres dbname=YTravel sslmode=disable"
+      DATA_SOURCE_NAME: 'user=ytravel_db_user password=ytravel_db_password host=postgres dbname=YTravel sslmode=disable'
     ports:
-      - "9187:9187"
+      - '9187:9187'
     depends_on:
       - postgres
     networks:
@@ -86,7 +125,7 @@ services:
   redis-exporter:
     image: oliver006/redis_exporter:latest
     ports:
-      - "9121:9121"
+      - '9121:9121'
     depends_on:
       - redis
     networks:
@@ -103,7 +142,7 @@ services:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
     ports:
-      - "3001:3000"
+      - '3001:3000'
     networks:
       - ytravel-network
     depends_on:
