@@ -13,9 +13,10 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 // import { RolesModule } from './roles/roles.module';
 // import { RoomsModule } from './rooms/rooms.module';
 import { UserModule } from './modules/users/users.module';
-import { UserService } from './modules/users/users.service';
 import { EmailModule } from './modules/email/email.module';
 import { PrometheusMiddleware } from './middleware/prometheus.middleware';
+import { AuthModule } from './modules/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -47,9 +48,11 @@ import { PrometheusMiddleware } from './middleware/prometheus.middleware';
     // RoomsModule,
     EmailModule,
     UserModule,
+    AuthModule,
+    JwtModule,
   ],
   controllers: [],
-  providers: [UserService],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
