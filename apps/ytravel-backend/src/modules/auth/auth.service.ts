@@ -13,15 +13,19 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
+      return { id: user.id, username: user.username };
     }
     return null;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(email: string, pass: string) {
+    const user = await this.validateUser(email, pass);
+
+    if (!user) {
+      return { message: 'Invalid credentials' };
+    }
+
+    const payload = { userId: user.id, username: user.username };
     return {
       access_token: this.jwtService.sign(payload),
     };
