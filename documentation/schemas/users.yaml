@@ -1,0 +1,37 @@
+type: object
+properties:
+  id:
+    type: int
+    description: The unique identifier for the hotel.
+  profileId:
+    type: int
+    description: The unique identifier for the profile.
+  roleId:
+    type: array
+    items:
+      type: int
+    description: The unique identifier for the role.
+  username:
+    type: string
+    description: The username of the user.
+    required: true
+  email:
+    type: string
+    description: The email of the user.
+    required: true
+  password:
+    type: string
+    description: The password of the user.
+    required: true
+  verfified:
+    type: boolean
+    description: The verfified of the user.
+    required: true
+  verificationToken:
+    type: string
+    description: The verification token of the user.
+  createdAt:
+    type: string
+    format: date
+    description: The creation date of the user.
+    required: true
