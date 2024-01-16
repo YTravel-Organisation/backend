@@ -1,0 +1,47 @@
+type: obeject
+properties:
+  id:
+    type: int
+    description: The unique identifier for the hotel.
+  timestamp:
+    type: string
+    format: date
+    description: The timestamp of the log.
+    required: true
+  userId:
+    type: int
+    description: The unique identifier for the user.
+  eventType:
+    type: enum
+    description: The event type of the log.
+    enum:
+      - "Login"
+      - "Logout"
+      - "Create"
+      - "Update"
+      - "Delete"
+    required: true
+  description:
+    type: string
+    description: The description of the log.
+    required: true
+  severity:
+    type: enum
+    description: The severity of the log.
+    enum:
+      - "Info"
+      - "Warning"
+      - "Error"
+    required: true
+  ipAddress:
+    type: string
+    description: The ip adress of the log.
+    required: true
+  userAgent:
+    type: string
+    description: The user agent of the log.
+    required: true
+  endpoint:
+    type: string
+    description: The endpoint of the log.
+    required: true
