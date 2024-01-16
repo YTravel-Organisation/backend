@@ -1,0 +1,91 @@
+type: object
+properties:
+  id:
+    type: int
+    description: The unique identifier for the hotel.
+  adminId:
+    type: array
+    items:
+      type: int
+    description: The unique identifier for the admin.
+  name:
+    type: string
+    description: The name of the hotel.
+    required: true
+  description:
+    type: string
+    description: The description of the hotel.
+    required: true
+  address:
+    type: string
+    description: The address of the hotel.
+    required: true
+  email:
+    type: string
+    description: The email of the hotel.
+    required: true
+  website:
+    type: string
+    format: url
+    description: The website of the hotel.
+    required: true
+  phoneNumbers:
+    type: array
+    items:
+      type: string
+    description: The phone numbers of the hotel.
+    required: true
+  rating:
+    type: number
+    description: The rating of the hotel.
+    required: true
+  verified:
+    type: boolean
+    description: The verified of the hotel.
+    required: true
+  commentsId:
+    type: array
+    items:
+      type: int
+    description: The unique identifier for the comments.
+  bannerImage:
+    type: string
+    description: The banner image of the hotel.
+    required: true
+  suppImage:
+    type: array
+    items:
+      type: string
+    description: The supp image of the hotel.
+    required: true
+  longitude:
+    type: number
+    description: The longitude of the hotel.
+    required: true
+  latitude:
+    type: number
+    description: The latitude of the hotel.
+    required: true
+  faq:
+    type: array
+    items:
+      type: string
+    description: The faq of the hotel.
+    required: true
+  paymentMethod:
+    type: array
+    items:
+      type: string
+    description: The payment method of the hotel.
+    required: true
+  otherInformation:
+    type: array
+    items:
+      type: string
+    description: The other information of the hotel.
+    required: true
+  createdAt:
+    type: string
+    format: date
+    description: The creation date of the hotel.
+    required: true
