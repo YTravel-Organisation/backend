@@ -1,0 +1,58 @@
+type: object
+properties:
+  id:
+    type: int
+    description: The unique identifier for the event.
+  hotelId:
+    type: int
+    description: The unique identifier for the hotel.
+  name:
+    type: string
+    description: The name of the event.
+    required: true
+  description:
+    type: string
+    description: The description of the event.
+    required: true
+  price:
+    type: number
+    description: The price of the event.
+    required: true
+  eventType:
+    type: enum
+    description: The type of event.
+    enum:
+      - "Concert"
+      - "Festival"
+      - "Musée"
+      - "Parc d'attraction"
+      - "Spectacle"
+      - "Sport"
+      - "Théâtre"
+  required: true
+  longitude:
+    type: number
+    description: The longitude of the event.
+    required: true
+  latitude:
+    type: number
+    description: The latitude of the event.
+    required: true
+  maxCapacity:
+    type: int
+    description: The maximum capacity of the event.
+    required: true
+  organizerName:
+    type: string
+    description: The organizer name of the event.
+    required: true
+  startDate:
+    type: string
+    format: date
+    description: The start date of the event.
+    required: true
+  endDate:
+    type: string
+    format: date
+    description: The end date of the event.
+    required: true
