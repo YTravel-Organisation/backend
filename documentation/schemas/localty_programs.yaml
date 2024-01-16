@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: int
+    description: The unique identifier for the hotel.
+  userId:
+    type: int
+    description: The unique identifier for the user.
+  programName:
+    type: enum
+    description: The name of the program.
+    enum:
+      - "Bronze"
+      - "Silver"
+      - "Gold"
+      - "Platinum"
+    required: true
+  promotion:
+    type: int
+    description: The promotion of the program.
+    required: true
+  promotionCode:
+    type: string
+    description: The promotion code of the program.
+    required: true
