@@ -14,7 +14,8 @@ export class HotelsService {
         const hotel = await this.prisma.hotel.create({
             data: {
                 ...createHotelDto,
-                createdAt: new Date(),
+                rating: 0,
+                bannerImage: '',
             },
         });
         return hotel;

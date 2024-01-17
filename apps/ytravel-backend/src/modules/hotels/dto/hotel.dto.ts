@@ -62,7 +62,12 @@ export class CreateHotelDto {
     @ApiProperty()
     @AutoMap()
     @IsNotEmpty()
-    faq: string;
+    faq: [string];
+
+    @ApiProperty()
+    @AutoMap()
+    @IsNotEmpty()
+    paymentMethod: [string];
 
     @ApiProperty()
     @AutoMap()
