@@ -9,3 +9,4 @@ Module({
     controllers: [HotelsController],
     providers: [HotelsService, PrismaService],
 })
+export class HotelsModule {}
