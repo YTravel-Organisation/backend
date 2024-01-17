@@ -6,7 +6,7 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 
 // import { CommentsModule } from './comments/comments.module';
 // import { EventsModule } from './events/events.module';
-// import { HotelsModule } from './hotels/hotels.module';
+import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { PaymentsModule } from './payments/payments.module';
 // import { ReservationsModule } from './reservations/reservations.module';
@@ -17,6 +17,7 @@ import { EmailModule } from './modules/email/email.module';
 import { PrometheusMiddleware } from './middleware/prometheus.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { HotelsModule } from './modules/hotels/hotels.module';
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     // CommentsModule,
     // EventsModule,
-    // HotelsModule,
+    HotelsModule,
     // NotificationsModule,
     // PaymentsModule,
     // ReservationsModule,
