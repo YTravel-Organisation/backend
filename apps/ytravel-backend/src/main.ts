@@ -14,6 +14,9 @@ async function bootstrap() {
     .setTitle('YTravel Backend API')
     .setDescription('YTravel Backend API')
     .setVersion('1.0')
+    .addServer('http://api.ytravel:3000', 'Production server')
+    .addServer('http://api.staging.ytravel', 'Staging server')
+    .addServer('http://localhost:3000', 'Development server')
     .addBearerAuth()
     .build();
 
