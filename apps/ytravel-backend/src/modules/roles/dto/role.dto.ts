@@ -1,19 +1,15 @@
 import { IsInt, IsString, IsOptional, IsBoolean} from 'class-validator';
 
 export class CreateRoleDto {
-  @IsInt()
-  roleId?: number;
-
   @IsString()
   name: string;
 
-  @IsOptional()
   @IsString()
   description: string;
 
   @IsOptional()
   @IsInt()
-  privilegeLevel: number;
+  privilegeLevel?: number;
 
   @IsOptional()
   @IsBoolean()
@@ -25,9 +21,6 @@ export class CreateRoleDto {
 }
 
 export class UpdateRoleDto {
-  @IsInt()
-  roleId?: number;
-
   @IsString()
   name: string;
 

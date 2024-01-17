@@ -28,7 +28,7 @@ model Role {
   createdAt           DateTime? @default(now())
   users               User[]
 
-  @@map("role")
+  @@map("roles")
 }
 
 model Room {

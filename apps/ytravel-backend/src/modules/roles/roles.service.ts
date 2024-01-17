@@ -12,6 +12,7 @@ export class RoleService {
         data: {
           ...createRoleDto,
           status: false,
+          privilegeLevel: 0,
           createdAt: new Date(),
         },
       });
