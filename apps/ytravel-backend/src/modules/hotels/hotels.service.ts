@@ -17,4 +17,18 @@ export class HotelsService {
         });
         return hotel;
     }
+    
+    async getHotels() {
+        const hotels = await this.prisma.hotel.findMany();
+        return hotels;
+    }
+    
+    getHotelById(id: number) {
+        const hotel = this.prisma.hotel.findUnique({
+            where: {
+                id: id,
+            },
+        });
+        return hotel;
+    }
 }
