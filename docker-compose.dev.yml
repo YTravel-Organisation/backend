@@ -68,7 +68,7 @@ services:
   ytravel:
     build:
       context: .
-      dockerfile: apps/ytravel-backend/Dockerfile
+      dockerfile: apps/ytravel-backend/dev.Dockerfile
     ports:
       - '3000:3000'
     networks:
@@ -77,17 +77,21 @@ services:
       - postgres
       - redis
       - rabbitmq
+    volumes:
+      - ./apps:/app/apps
 
   smtp-services:
     build:
       context: .
-      dockerfile: apps/smtp/Dockerfile
+      dockerfile: apps/smtp/dev.Dockerfile
     networks:
       - ytravel-network
     depends_on:
       - postgres
       - redis
       - rabbitmq
+    volumes:
+      - ./apps:/app/apps
 
   mailhog:
     image: mailhog/mailhog:latest
