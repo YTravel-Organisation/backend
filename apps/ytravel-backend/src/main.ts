@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import { register } from 'prom-client';
 
@@ -8,6 +9,20 @@ dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const document = new DocumentBuilder()
+    .setTitle('YTravel Backend API')
+    .setDescription('YTravel Backend API')
+    .setVersion('1.0')
+    .addServer('http://api.ytravel:3000', 'Production server')
+    .addServer('http://api.staging.ytravel', 'Staging server')
+    .addServer('http://localhost:3000', 'Development server')
+    .addBearerAuth()
+    .build();
+
+  const writerDescriptorDocument = SwaggerModule.createDocument(app, document);
+  SwaggerModule.setup('api/documentation', app, writerDescriptorDocument);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
