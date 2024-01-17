@@ -10,8 +10,8 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { PaymentsModule } from './payments/payments.module';
 // import { ReservationsModule } from './reservations/reservations.module';
-// import { RolesModule } from './roles/roles.module';
 // import { RoomsModule } from './rooms/rooms.module';
+import { RolesModule } from './modules/roles/roles.module';
 import { UserModule } from './modules/users/users.module';
 import { EmailModule } from './modules/email/email.module';
 import { PrometheusMiddleware } from './middleware/prometheus.middleware';
@@ -44,8 +44,8 @@ import { JwtModule } from '@nestjs/jwt';
     // NotificationsModule,
     // PaymentsModule,
     // ReservationsModule,
-    // RolesModule,
     // RoomsModule,
+    RolesModule,
     EmailModule,
     UserModule,
     AuthModule,
