@@ -7,12 +7,13 @@ import {
   Put,
   Delete,
   InternalServerErrorException,
+  Query,
 } from '@nestjs/common';
 import { RoleService } from './roles.service';
 import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('roles')
+@ApiTags('Roles')
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
@@ -27,9 +28,15 @@ export class RoleController {
   }
 
   @Get()
-  findAll() {
+  findAll(
+    @Query('page') queryPage: number,
+    @Query('limit') queryLimit: number,
+  ) {
+    const limit = parseInt(queryLimit.toString(), 10) || 10;
+    const page = parseInt(queryPage.toString(), 10) || 1;
+
     try {
-      return this.roleService.findAll();
+      return this.roleService.findAll(limit, page);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

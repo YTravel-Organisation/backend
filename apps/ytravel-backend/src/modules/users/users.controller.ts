@@ -13,7 +13,7 @@ import { UserService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -21,7 +21,9 @@ export class UserController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.userService.create(createUserDto);
+      this.userService.create(createUserDto);
+
+      return 'UserCreated';
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -37,9 +39,15 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
+  findAll(
+    @Query('page') queryPage: number,
+    @Query('limit') queryLimit: number,
+  ) {
+    const limit = parseInt(queryLimit.toString(), 10) || 10;
+    const page = parseInt(queryPage.toString(), 10) || 1;
+
     try {
-      return this.userService.findAll();
+      return this.userService.findAll(limit, page);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

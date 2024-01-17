@@ -34,8 +34,12 @@ export class UserService {
     return 'AccountCreated';
   }
 
-  async findAll() {
-    return this.prisma.user.findMany();
+  async findAll(limit, page) {
+    const skip = limit * (page - 1);
+    return this.prisma.user.findMany({
+      skip: skip,
+      take: limit,
+    });
   }
 
   async findOne(id: number) {
