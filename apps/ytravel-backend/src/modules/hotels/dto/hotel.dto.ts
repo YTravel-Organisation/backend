@@ -1,4 +1,10 @@
-import { IsLatitude, IsLongitude, IsNotEmpty, IsNumber, IsPhoneNumber } from "class-validator";
+import { 
+    IsLatitude,
+    IsLongitude, 
+    IsNotEmpty, 
+    IsNumber, 
+    IsPhoneNumber 
+} from "class-validator";
 
 export class CreateHotelDto {
 
