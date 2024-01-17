@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ytravel-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  redis:
+    image: redis:latest
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    environment:
+      REDIS_PASSWORD: ytravel_redis_password
+    networks:
+      - ytravel-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    networks:
+      - ytravel-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5672']
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - ytravel-network
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+  ytravel:
+    build:
+      context: .
+      dockerfile: apps/ytravel-backend/dev.Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - ytravel-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    volumes:
+      - ./apps:/app/apps
+
+  smtp-services:
+    build:
+      context: .
+      dockerfile: apps/smtp/dev.Dockerfile
+    networks:
+      - ytravel-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    volumes:
+      - ./apps:/app/apps
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: 'mailhog'
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+    networks:
+      - ytravel-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - '9090:9090'
+    networks:
+      - ytravel-network
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
+      - postgres-exporter
+      - redis-exporter
+
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:latest
+    environment:
+      DATA_SOURCE_NAME: 'user=ytravel_db_user password=ytravel_db_password host=postgres dbname=YTravel sslmode=disable'
+    ports:
+      - '9187:9187'
+    depends_on:
+      - postgres
+    networks:
+      - ytravel-network
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    ports:
+      - '9121:9121'
+    depends_on:
+      - redis
+    networks:
+      - ytravel-network
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards_json:/var/lib/grafana/dashboards
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - '3001:3000'
+    networks:
+      - ytravel-network
+    depends_on:
+      - prometheus
+
+networks:
+  ytravel-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
