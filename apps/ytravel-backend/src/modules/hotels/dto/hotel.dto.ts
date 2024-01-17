@@ -1,18 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { AutoMap } from "nestjsx-automapper";
 import { 
+    IsInt,
     IsLatitude,
     IsLongitude, 
     IsNotEmpty, 
-    IsNumber, 
     IsPhoneNumber 
 } from "class-validator";
 
 export class CreateHotelDto {
     @ApiProperty()
     @AutoMap()
-    @IsNotEmpty()
-    @IsNumber()
+    @IsNotEmpty()  
+    @IsInt()
     admin_id: number;
 
     @ApiProperty()
