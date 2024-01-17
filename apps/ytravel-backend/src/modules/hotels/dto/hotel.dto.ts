@@ -5,6 +5,7 @@ import {
     IsLatitude,
     IsLongitude, 
     IsNotEmpty, 
+    IsOptional, 
     IsPhoneNumber 
 } from "class-validator";
 
@@ -67,4 +68,65 @@ export class CreateHotelDto {
     @AutoMap()
     @IsNotEmpty()
     other_information: string;
+}
+
+export class UpdateHotelDto {
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()  
+    @IsInt()
+    admin_id?: number;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    name?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    description?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    address?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    email?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    website?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    @IsPhoneNumber()
+    phone_number?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    @IsLongitude()
+    longitude?: number;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    @IsLatitude()
+    latitude?: number;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    faq?: string;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    other_information?: string;
 }
