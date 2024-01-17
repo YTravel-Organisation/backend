@@ -99,7 +99,7 @@ model Transport {
   id              Int           @id @default(autoincrement())
   transportType   TransportType
   price           BigInt
-  travelTime      DateTime
+  travelTime      Int
   departure       String
   arrival         String
   occupancy       Int
@@ -119,7 +119,7 @@ model PropertyAmenity {
   kitchen       Boolean
   bathroom      BigInt
   bed           String[]
-  communication String
+  communication String[]
   accessible    Boolean
   balcony       Boolean
   parking       Boolean
@@ -132,6 +132,7 @@ model PropertyAmenity {
 
 model User {
   id                Int              @id @default(autoincrement())
+  profileId         Int?
   roleId            Int?
   username          String
   email             String           @unique
@@ -140,11 +141,11 @@ model User {
   verificationToken String?          @unique
   createdAt         DateTime         @default(now())
   role              Role?            @relation(fields: [roleId], references: [id])
+  profile           Profile?         @relation(fields: [profileId], references: [id])
   loyaltyPrograms   LoyaltyProgram[]
   notifications     Notification[]
   comments          Comment[]
   payments          Payment[]
-  profiles          Profile[]
   reservations      Reservation[]
   logs              Log[]
   hotels            Hotel[]
@@ -198,7 +199,6 @@ model Comment {
 
 model Profile {
   id           Int      @id @default(autoincrement())
-  userId       Int
   gender       Gender
   firstName    String
   lastName     String
@@ -211,7 +211,7 @@ model Profile {
   country      String
   dateOfBirth  DateTime
   lastSearch   String[]
-  user         User     @relation(fields: [userId], references: [id])
+  user         User[]
 
   @@map("profiles")
 }
@@ -240,7 +240,7 @@ model Hotel {
   address          String
   email            String
   website          String?
-  phoneNumber      String
+  phoneNumber      String[]
   rating           Decimal
   verified         Boolean   @default(false)
   commentsId       Int[]
@@ -283,11 +283,9 @@ enum LogsType {
 }
 
 enum MethodPayment {
-  CASH
   CREDIT_CARD
   DEBIT_CARD
   PAYPAL
-  BITCOIN
   OTHER
 }
 
