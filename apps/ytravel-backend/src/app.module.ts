@@ -11,6 +11,7 @@ import { CommentsModule } from './modules/comments/comments.module';
 // import { PaymentsModule } from './payments/payments.module';
 // import { ReservationsModule } from './reservations/reservations.module';
 // import { RoomsModule } from './rooms/rooms.module';
+import { ProfilesModule } from './modules/profiles/profiles.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { UserModule } from './modules/users/users.module';
 import { EmailModule } from './modules/email/email.module';
@@ -50,6 +51,7 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     AuthModule,
     JwtModule,
+    ProfilesModule,
   ],
   controllers: [],
   providers: [],
