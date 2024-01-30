@@ -9,11 +9,15 @@ resources:
 - repo: self
 
 variables:
+  dockerRegistryServiceConnection: 'd591abad-c6b1-49f5-a112-db34c8d0d7bb'
+  imageRepository: 'ytravelorganisationbackend'
+  containerRegistry: 'ytravelregistry.azurecr.io'
+  dockerfilePath: './apps/ytravel-backend/'
   tag: '$(Build.BuildId)'
 
 stages:
 - stage: Build
-  displayName: Build image
+  displayName: Build and Push Image
   jobs:
   - job: Build
     displayName: Build
@@ -21,10 +25,18 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Login to ACR
       inputs:
-        command: build
-        dockerfile: './apps/ytravel-backend/Dockerfile'
+        command: login
+        containerRegistry: $(dockerRegistryServiceConnection)
+
+    - task: Docker@2
+      displayName: Build and push an image
+      inputs:
+        command: buildAndPush
+        repository: $(containerRegistry)/$(imageRepository)
+        dockerfile: $(dockerfilePath)Dockerfile
+        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
 
@@ -35,7 +47,7 @@ stages:
   jobs:
   - deployment: DeployToAzure
     displayName: Deploy to Azure
-    environment: 'developpement'
+    environment: 'production' # Adjust as needed
     pool:
       vmImage: ubuntu-latest
     strategy:
@@ -48,4 +60,6 @@ stages:
               azureSubscription: 'Azure for Students(5de54548-ddbe-406e-a1d2-d64d7ba823d4)'
               appType: 'webAppContainer'
               WebAppName: 'ytravel-backend'
+              DockerNamespace: $(containerRegistry)
+              DockerRepository: $(imageRepository)
               DockerImageTag: '$(tag)'
