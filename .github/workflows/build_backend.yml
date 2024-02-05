@@ -29,4 +29,6 @@ jobs:
         context: .
         file: ./apps/ytravel-backend/Dockerfile
         push: true
-        tags: ghcr.io/ytravel-organisation/ytravel-backend:${{ github.sha }}
+        tags: |
+          ghcr.io/ytravel-organisation/ytravel-backend:${{ github.sha }}
+          ghcr.io/ytravel-organisation/ytravel-backend:latest
