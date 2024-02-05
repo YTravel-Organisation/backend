@@ -22,4 +22,4 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'ytravel-backend'
-        images: 'ghcr.io/votre-organisation/backend:latest'
+        images: 'ghcr.io/ytravel-organisation/backend:latest'
