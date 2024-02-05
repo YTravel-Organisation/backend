@@ -27,6 +27,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./apps/backend-ytravel/Dockerfile
+        file: ./apps/ytravel-backend/Dockerfile
         push: true
-        tags: ghcr.io/ytravel-organisation/backend-ytravel:${{ github.sha }}
+        tags: ghcr.io/ytravel-organisation/ytravel-backend:${{ github.sha }}

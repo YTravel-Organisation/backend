@@ -8,7 +8,13 @@ import {
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
-import { Gender } from '@prisma/client';
+
+enum Gender {
+  MAN,
+  FEMALE,
+  OTHER,
+}
+
 export class CreateProfileDto {
   @ApiProperty()
   @AutoMap()
