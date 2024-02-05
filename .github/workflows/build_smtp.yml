@@ -29,4 +29,4 @@ jobs:
         context: .
         file: ./apps/smtp/Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/backend/apps/smtp:${{ github.sha }}
+        tags: ghcr.io/ytravel-organisation/smtp:${{ github.sha }}
