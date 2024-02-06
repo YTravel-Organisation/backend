@@ -1,11 +1,9 @@
-import { IsArray, IsDecimal, IsInt, IsOptional, IsString } from 'class-validator';
-import { isTypedArray } from 'util/types';
+import { IsArray, IsDecimal, IsInt, IsString } from 'class-validator';
 
 export class CreateRoomDto {
 
-    @IsOptional()
     @IsInt()
-    hotelId?: number;
+    hotelId: number;
 
     @IsString()
     roomType: string;
@@ -31,9 +29,8 @@ export class CreateRoomDto {
 
   export class UpdateRoomDto {
 
-    @IsOptional()
     @IsInt()
-    hotelId?: number;
+    hotelId: number;
 
     @IsString()
     roomType: string;

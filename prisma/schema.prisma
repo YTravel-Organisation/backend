@@ -41,7 +41,7 @@ model Room {
   pricePerNight     Decimal
   options           String[]
   images            String[]
-  hotel             Hotel?            @relation(fields: [hotelId], references: [id])
+  hotel             Hotel            @relation(fields: [hotelId], references: [id])
   propertyAmenities PropertyAmenity[]
   availabilities    Availability[]
   reservations      Reservation[]

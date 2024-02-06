@@ -6,12 +6,12 @@ import { CreateRoomDto, UpdateRoomDto } from './dto/room.dto';
 export class RoomService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createRoomDto: CreateRoomDto): Promise<{ status: number; message: string }> {
+  async create(createRoomDto: CreateRoomDto) {
     try {
       await this.prisma.room.create({
         data: {
           ...createRoomDto,
-          pricePerNight: 0,
+          hotelId: createRoomDto.hotelId,
         },
       });
 
