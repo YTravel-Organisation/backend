@@ -9,10 +9,10 @@ import {
   IsString,
 } from 'class-validator';
 
-enum Gender {
-  MAN,
-  FEMALE,
-  OTHER,
+enum MyGender {
+  MAN = 'MAN',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
 }
 
 export class CreateProfileDto {
@@ -23,7 +23,7 @@ export class CreateProfileDto {
 
   @ApiProperty()
   @AutoMap()
-  gender: Gender;
+  gender: MyGender;
 
   @ApiProperty()
   @AutoMap()
@@ -94,7 +94,7 @@ export class UpdateProfileDto {
   @ApiProperty()
   @AutoMap()
   @IsOptional()
-  gender?: Gender;
+  gender?: MyGender;
 
   @ApiProperty()
   @AutoMap()
