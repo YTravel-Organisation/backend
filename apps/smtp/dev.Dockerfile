@@ -7,7 +7,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npx prisma generate
+RUN npm run build smtp
 
 EXPOSE 3000
 CMD ["npm", "run", "start:dev", "smtp"]
