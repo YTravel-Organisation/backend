@@ -8,6 +8,7 @@ import {
     IsOptional, 
     IsPhoneNumber 
 } from "class-validator";
+import { MethodPayment } from "@prisma/client";
 
 export class CreateHotelDto {
     @ApiProperty()
@@ -67,7 +68,7 @@ export class CreateHotelDto {
     @ApiProperty()
     @AutoMap()
     @IsNotEmpty()
-    paymentMethod: [string];
+    paymentMethod: [MethodPayment];
 
     @ApiProperty()
     @AutoMap()
