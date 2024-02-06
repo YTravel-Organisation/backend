@@ -22,7 +22,7 @@ export class HotelsService {
     }
     
     async getHotels() {
-        const hotels = await this.prisma.hotel.findMany();
+        const hotels = this.prisma.hotel.findMany();
         return hotels;
     }
 

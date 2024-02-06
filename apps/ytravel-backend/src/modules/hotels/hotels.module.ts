@@ -1,12 +1,13 @@
-import { Module } from "@nestjs/common";
-import { HotelsController } from "./hotels.controller";
-import { HotelsService } from "./hotels.service";
-import { PrismaService } from "../../tools/database.config";
+// src/roles/roles.module.ts
+import { Module } from '@nestjs/common';
+import { PrismaService } from '../../tools/database.config';
+import { HotelsController } from './hotels.controller';
+import { HotelsService } from './hotels.service';
 
-Module({
-    imports: [],
-    exports: [HotelsService],
-    controllers: [HotelsController],
-    providers: [HotelsService, PrismaService],
+@Module({
+  controllers: [HotelsController],
+  imports: [HotelsModule],
+  exports:[HotelsService],
+  providers: [HotelsService,PrismaService],
 })
 export class HotelsModule {}
