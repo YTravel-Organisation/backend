@@ -6,7 +6,6 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 
 // import { CommentsModule } from './comments/comments.module';
 // import { EventsModule } from './events/events.module';
-import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { PaymentsModule } from './payments/payments.module';
 // import { ReservationsModule } from './reservations/reservations.module';
