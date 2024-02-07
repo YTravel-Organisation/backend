@@ -1,13 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../tools/database.config";
 import { CreateHotelDto } from "./dto/hotel.dto";
-
+import { AwsService } from "../aws/aws.service";
 
 @Injectable()
 export class HotelsService {
 
     constructor(
         private prisma: PrismaService,
+        private awsservice: AwsService,
     ) {}
 
     async createHotel(createHotelDto: CreateHotelDto) {
@@ -70,6 +71,13 @@ export class HotelsService {
             },
         });
         return hotel;
+    }
+
+    async uploadHotelImage(id: number) {
+        const url =  this.awsservice.generateUploadURL();
+
+
+        return url;
     }
 
 }

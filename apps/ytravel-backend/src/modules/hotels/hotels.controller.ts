@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { CreateHotelDto } from "./dto/hotel.dto";
 import { HotelsService } from "./hotels.service";
 import { ApiTags } from "@nestjs/swagger";
@@ -54,6 +54,14 @@ export class HotelsController {
             throw new InternalServerErrorException(error.message);
         }
     }
-    
 
+    @Post("upload/:id")
+    async uploadHotelImage(@Param("id") id: number){
+        console.log(id);
+        try {
+            return await this.hotelsService.uploadHotelImage(id);
+        } catch (error) {
+            throw new InternalServerErrorException(error.message);
+        }
+    }
 }
