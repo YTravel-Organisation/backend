@@ -8,16 +8,59 @@ export class EmailService {
     private readonly smtpProxy: ClientProxy,
   ) {}
 
-  async sendVerificationEmail(to: string, token: string) {
-    const subject = 'Verification Email';
-    const text = `Pour valider votre compte, cliquez sur le lien suivant: http://localhost:3000/users/verify-email?token=${token}`;
+  async sendWelcomeEmail(body: any) {
+    this.smtpProxy.emit('welcome-email', body);
+  }
 
-    // Send email
-    const payload = {
-      to,
-      subject,
-      text,
-    };
-    this.smtpProxy.emit('send_email', payload);
+  async sendVerificationEmail(body: any) {
+    this.smtpProxy.emit('send-verification-email', body);
+  }
+
+  async sendResetPasswordEmail(body: any) {
+    this.smtpProxy.emit('send-reset-password-email', body);
+  }
+
+  async sendBookingEmail(body: any) {
+    this.smtpProxy.emit('send-booking-email', body);
+  }
+
+  async sendBookingConfirmationEmail(body: any) {
+    this.smtpProxy.emit('send-confirmation-email', body);
+  }
+
+  async sendBookingCancellationEmail(body: any) {
+    this.smtpProxy.emit('send-cancel-reservation-email', body);
+  }
+
+  async sendBookingRefundEmail(body: any) {
+    this.smtpProxy.emit('send-booking-refund-email', body);
+  }
+
+  async sendDemandInformationEmail(body: any) {
+    this.smtpProxy.emit('send-demand-information-email', body);
+  }
+
+  async sendDemandHelpEmail(body: any) {
+    this.smtpProxy.emit('send-demand-help-email', body);
+  }
+
+  async sendPaymentConfirmationEmail(body: any) {
+    this.smtpProxy.emit('send-payment-confirmation-email', body);
+  }
+
+  async sendRappelMonthEmail(body: any) {
+    this.smtpProxy.emit('send-rappel-month-email', body);
+  }
+
+  async sendRappelWeekEmail(body: any) {
+    this.smtpProxy.emit('send-rappel-week-email', body);
+  }
+
+  async sendSatisfactionEmail(body: any) {
+    this.smtpProxy.emit('send-satisfaction-email', body);
+  }
+
+  async sendBookingUpdateEmail(body: any) {
+    this.smtpProxy.emit('send-booking-update-email', body);
   }
 }
