@@ -11,11 +11,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const document = new DocumentBuilder()
-    .setTitle('YTravel Backend API')
-    .setDescription('YTravel Backend API')
+    .setTitle('YTraveling Backend API')
+    .setDescription('YTraveling Backend API')
     .setVersion('1.0')
-    .addServer('http://api.ytravel:3000', 'Production server')
-    .addServer('http://api.staging.ytravel', 'Staging server')
+    .addServer('http://api.ytraveling.com', 'Production server')
+    .addServer('http://api-staging.ytraveling.com', 'Staging server')
     .addServer('http://localhost:3000', 'Development server')
     .addBearerAuth()
     .build();

@@ -5,7 +5,7 @@ COPY package-lock.json .
 RUN npm install
 COPY . .
 RUN npx prisma generate
-RUN npm run build ytravel-backend
+RUN npm run build ytraveling-backend
 
 FROM node:18-slim
 RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
@@ -19,4 +19,4 @@ COPY --chown=node:node --from=build /usr/src/app/node_modules/.prisma/client  ./
 
 ENV NODE_ENV production
 EXPOSE 3000
-CMD ["dumb-init", "node", "dist/apps/ytravel-backend/main"]
+CMD ["dumb-init", "node", "dist/apps/ytraveling-backend/main"]
