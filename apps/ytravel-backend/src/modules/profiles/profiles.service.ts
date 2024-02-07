@@ -7,12 +7,16 @@ export class ProfileService {
   constructor(private prisma: PrismaService) {}
 
   async create(createProfileDto: CreateProfileDto): Promise<string> {
+    const { userId, ...rest } = createProfileDto;
+
+    const SearchUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
     await this.prisma.profile.create({
       data: {
-        ...createProfileDto,
-        profileImage: '',
-        lastSearch: [],
-        userId: createProfileDto.userId,
+        user: { connect: { id: SearchUser.id } },
+        ...rest,
       },
     });
 
@@ -35,15 +39,24 @@ export class ProfileService {
     return profile;
   }
 
-  async update(id: number, updateProfileDto: UpdateProfileDto) {
-    const profile = await this.prisma.profile.findUnique({ where: { id } });
-    if (!profile) {
-      throw new NotFoundException("Profile doesn't exist");
+  async update(profileId, updateProfileDto: UpdateProfileDto): Promise<string> {
+    const { userId, ...rest } = updateProfileDto;
+
+    const searchUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!searchUser) {
+      throw new Error('UserNotFound');
     }
+
     await this.prisma.profile.update({
-      where: { id },
+      where: {
+        id: profileId,
+      },
       data: {
-        ...updateProfileDto,
+        user: { connect: { id: userId } },
+        ...rest,
       },
     });
     return 'ProfileUpdated';
