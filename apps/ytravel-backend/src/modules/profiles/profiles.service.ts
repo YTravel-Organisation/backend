@@ -39,7 +39,10 @@ export class ProfileService {
     return profile;
   }
 
-  async update(profileId, updateProfileDto: UpdateProfileDto): Promise<string> {
+  async update(
+    profileId: number,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<string> {
     const { userId, ...rest } = updateProfileDto;
 
     const searchUser = await this.prisma.user.findUnique({

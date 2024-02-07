@@ -36,7 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "nestjsx-automapper": "^3.1.4",
     "nodemailer": "^6.9.7",
-    "nodemailer-smtp-transport": "^2.7.4",
+    "nodemailer-smtp-transport": "^2.4.2",
     "nodemon": "^3.0.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
