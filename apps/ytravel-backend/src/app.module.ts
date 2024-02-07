@@ -8,8 +8,8 @@ import { CommentsModule } from './modules/comments/comments.module';
 // import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { ReservationsModule } from './reservations/reservations.module';
-// import { RoomsModule } from './rooms/rooms.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { RoomModule } from './modules/rooms/rooms.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { UserModule } from './modules/users/users.module';
@@ -43,8 +43,8 @@ import { JwtModule } from '@nestjs/jwt';
     // HotelsModule,
     // NotificationsModule,
     // ReservationsModule,
-    // RoomsModule,
     PaymentsModule,
+    RoomModule,
     RolesModule,
     EmailModule,
     UserModule,
