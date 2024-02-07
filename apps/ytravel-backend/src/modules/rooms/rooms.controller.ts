@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException } from '@nestjs/common';
 import { RoomService } from './rooms.service';
 import { CreateRoomDto, UpdateRoomDto } from './dto/room.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Rooms')
 @Controller('rooms')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}

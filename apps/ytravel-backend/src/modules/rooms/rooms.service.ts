@@ -8,14 +8,19 @@ export class RoomService {
 
   async create(createRoomDto: CreateRoomDto) {
     try {
-      await this.prisma.room.create({
-        data: {
-          ...createRoomDto,
-          hotelId: createRoomDto.hotelId,
-        },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { hotelId, ...rest } = createRoomDto;
+
+      const SearchHotel = await this.prisma.hotel.findUnique({
+        where: { id: createRoomDto.hotelId },
       });
 
-      return { status: 201, message: 'RoomCreated' };
+      return await this.prisma.room.create({
+        data: {
+          hotel: { connect: { id: SearchHotel.id } },
+          ...rest,
+        },
+      });
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException('Internal Server Error');
@@ -52,18 +57,23 @@ export class RoomService {
     }
   }
 
-  async update(id: number, updateRoom: UpdateRoomDto) {
+  async update(RoomId: number, updateRoomDto: UpdateRoomDto) {
     try {
-      const updatedRoom = await this.prisma.room.update({ where: { id }, data: updateRoom });
+      const {
+       hotelId,
+       ...rest
+      } = updateRoomDto;
 
-      if (!updatedRoom) {
-        return { status: 204, message: 'No room found' };
-      } else {
-        return { status: 200, message: 'RoomUpdated', data: updatedRoom };
-      }
+      return await this.prisma.room.update({
+        where: { id: RoomId },
+        data: {
+          hotel: { connect: { id: updateRoomDto.hotelId } },
+          ...rest,
+        },
+      });
     } catch (error) {
       console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 

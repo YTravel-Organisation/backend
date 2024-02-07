@@ -1,55 +1,91 @@
-import { IsArray, IsDecimal, IsInt, IsString } from 'class-validator';
+import { RoomType } from '@prisma/client';
+import { IsArray, IsDecimal, IsInt, IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from 'nestjsx-automapper';
 
 export class CreateRoomDto {
 
-    @IsInt()
+    @ApiProperty()
+    @AutoMap()
+    @IsNumber()
     hotelId: number;
 
+    @ApiProperty()
+    @AutoMap()
     @IsString()
-    roomType: string;
+    roomType: RoomType;
 
+    @ApiProperty()
+    @AutoMap()
     @IsString()
     description: string;
 
+    @ApiProperty()
+    @AutoMap()
     @IsString()
     viewType: string;
 
+    @ApiProperty()
+    @AutoMap()
     @IsInt()
     maxOccupancy: number;
 
+    @ApiProperty()
+    @AutoMap()
     @IsDecimal()
     pricePerNight: number;
 
+    @ApiProperty()
+    @AutoMap()
     @IsArray()
     option: string[];
 
+    @ApiProperty()
+    @AutoMap()
     @IsArray()
     image: string[];
   }
 
   export class UpdateRoomDto {
 
-    @IsInt()
+    @ApiProperty()
+    @AutoMap()
+    @IsNumber()
     hotelId: number;
 
+    @ApiProperty()
+    @AutoMap()
     @IsString()
-    roomType: string;
+    roomType: RoomType;
 
+    @ApiProperty()
+    @AutoMap()
     @IsString()
     description: string;
 
+    @ApiProperty()
+    @AutoMap()
     @IsString()
     viewType: string;
 
+    @ApiProperty()
+    @AutoMap()
     @IsInt()
     maxOccupancy: number;
 
+    @ApiProperty()
+    @AutoMap()
     @IsDecimal()
     pricePerNight: number;
 
+    @ApiProperty()
+    @AutoMap()
     @IsArray()
     option: string[];
 
+    @ApiProperty()
+    @AutoMap()
     @IsArray()
     image: string[];
+    static id: any;
   }
