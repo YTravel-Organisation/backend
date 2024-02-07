@@ -5,7 +5,7 @@ import RedisConfig from './tools/redis.config';
 import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 
 import { CommentsModule } from './modules/comments/comments.module';
-// import { EventsModule } from './events/events.module';
+import { EventsModule } from './modules/events/events.module';
 // import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { PaymentsModule } from './payments/payments.module';
@@ -41,7 +41,7 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
     CommentsModule,
-    // EventsModule,
+    EventsModule,
     // HotelsModule,
     // NotificationsModule,
     // PaymentsModule,
