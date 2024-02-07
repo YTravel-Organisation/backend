@@ -253,7 +253,7 @@ model Hotel {
   otherInformation String[]
   rooms            Room[]
   events           Event[]
-  user             User?     @relation(fields: [userId], references: [id])
+  user             User      @relation(fields: [userId], references: [id])
   comments         Comment[]
 
   @@map("hotels")
