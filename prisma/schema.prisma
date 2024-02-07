@@ -10,7 +10,7 @@ datasource db {
 model LoyaltyProgram {
   id            Int     @id @default(autoincrement())
   userId        Int
-  programName   Program    @default(BASIC)
+  programName   Program @default(BASIC)
   promotion     BigInt?
   promotionCode String?
   user          User    @relation(fields: [userId], references: [id])
@@ -71,7 +71,7 @@ model Event {
 }
 
 model Reservation {
-  id                Int            @id @default(autoincrement())
+  id                Int               @id @default(autoincrement())
   bookingType       BookingType
   userId            Int
   roomId            Int?
@@ -84,12 +84,12 @@ model Reservation {
   specialRequest    String?
   uniqueBookingCode String
   internalNotes     String?
-  createdAt         DateTime?      @default(now())
-  user              User           @relation(fields: [userId], references: [id])
-  room              Room?          @relation(fields: [roomId], references: [id])
-  payment           Payment?       @relation(fields: [paymentId], references: [id])
-  event             Event?         @relation(fields: [eventId], references: [id])
-  transport         Transport?     @relation(fields: [transportId], references: [id])
+  createdAt         DateTime?         @default(now())
+  user              User              @relation(fields: [userId], references: [id])
+  room              Room?             @relation(fields: [roomId], references: [id])
+  payment           Payment?          @relation(fields: [paymentId], references: [id])
+  event             Event?            @relation(fields: [eventId], references: [id])
+  transport         Transport?        @relation(fields: [transportId], references: [id])
   availabilities    Availability[]
 
   @@map("reservations")
@@ -99,7 +99,7 @@ model Transport {
   id              Int           @id @default(autoincrement())
   transportType   TransportType
   price           BigInt
-  travelTime      DateTime
+  travelTime      Int
   departure       String
   arrival         String
   occupancy       Int
@@ -114,24 +114,25 @@ model Transport {
 }
 
 model PropertyAmenity {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   roomId        Int
   kitchen       Boolean
   bathroom      BigInt
   bed           String[]
-  communication String
+  communication String[]
   accessible    Boolean
   balcony       Boolean
   parking       Boolean
   locality      String[]
   other         String[]
-  room          Room    @relation(fields: [roomId], references: [id])
+  room          Room     @relation(fields: [roomId], references: [id])
 
   @@map("property_amenities")
 }
 
 model User {
   id                Int              @id @default(autoincrement())
+  profileId         Int?
   roleId            Int?
   username          String
   email             String           @unique
@@ -140,40 +141,39 @@ model User {
   verificationToken String?          @unique
   createdAt         DateTime         @default(now())
   role              Role?            @relation(fields: [roleId], references: [id])
+  profile           Profile?         @relation(fields: [profileId], references: [id])
   loyaltyPrograms   LoyaltyProgram[]
   notifications     Notification[]
   comments          Comment[]
   payments          Payment[]
-  profiles          Profile[]
   reservations      Reservation[]
   logs              Log[]
   hotels            Hotel[]
 
   @@map("users")
 }
-
 model Availability {
-  id            Int         @id @default(autoincrement())
+  id            Int                @id @default(autoincrement())
   roomId        Int
   reservationId Int
   startDate     DateTime
   endDate       DateTime
   status        AvailabilityStatus
-  createdAt     DateTime?   @default(now())
-  room          Room        @relation(fields: [roomId], references: [id])
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  createdAt     DateTime?          @default(now())
+  room          Room               @relation(fields: [roomId], references: [id])
+  reservation   Reservation        @relation(fields: [reservationId], references: [id])
 
   @@map("availabilities")
 }
 
 model Notification {
-  id        Int       @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   userId    Int
   type      NotificationType
   title     String
   message   String
-  createdAt DateTime? @default(now())
-  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime?        @default(now())
+  user      User             @relation(fields: [userId], references: [id])
 
   @@map("notifications")
 }
@@ -198,7 +198,7 @@ model Comment {
 
 model Profile {
   id           Int      @id @default(autoincrement())
-  userId       Int
+  userId       Int      @unique
   gender       Gender
   firstName    String
   lastName     String
@@ -211,7 +211,7 @@ model Profile {
   country      String
   dateOfBirth  DateTime
   lastSearch   String[]
-  user         User     @relation(fields: [userId], references: [id])
+  user         User[]
 
   @@map("profiles")
 }
@@ -233,16 +233,16 @@ model Payment {
 }
 
 model Hotel {
-  id               Int       @id @default(autoincrement())
+  id               Int           @id @default(autoincrement())
   userId           Int
   name             String
   description      String
   address          String
   email            String
   website          String?
-  phoneNumber      String
+  phoneNumber      String[]
   rating           Decimal
-  verified         Boolean   @default(false)
+  verified         Boolean       @default(false)
   commentsId       Int[]
   bannerImage      String
   suppImage        String[]
@@ -253,7 +253,7 @@ model Hotel {
   otherInformation String[]
   rooms            Room[]
   events           Event[]
-  user             User?     @relation(fields: [userId], references: [id])
+  user             User?         @relation(fields: [userId], references: [id])
   comments         Comment[]
 
   @@map("hotels")
@@ -283,11 +283,9 @@ enum LogsType {
 }
 
 enum MethodPayment {
-  CASH
   CREDIT_CARD
   DEBIT_CARD
   PAYPAL
-  BITCOIN
   OTHER
 }
 

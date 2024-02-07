@@ -4,13 +4,15 @@ import { PrismaModule } from './tools/prisma.module';
 import RedisConfig from './tools/redis.config';
 import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 
-// import { CommentsModule } from './comments/comments.module';
+import { CommentsModule } from './modules/comments/comments.module';
 // import { EventsModule } from './events/events.module';
 // import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { PaymentsModule } from './payments/payments.module';
 // import { ReservationsModule } from './reservations/reservations.module';
+
  import { RoomModule } from './modules/rooms/rooms.module';
+import { ProfilesModule } from './modules/profiles/profiles.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { UserModule } from './modules/users/users.module';
 import { EmailModule } from './modules/email/email.module';
@@ -38,7 +40,7 @@ import { JwtModule } from '@nestjs/jwt';
       }),
       inject: [ConfigService],
     }),
-    // CommentsModule,
+    CommentsModule,
     // EventsModule,
     // HotelsModule,
     // NotificationsModule,
@@ -50,6 +52,7 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     AuthModule,
     JwtModule,
+    ProfilesModule,
   ],
   controllers: [],
   providers: [],
