@@ -33,6 +33,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.3.1",
+    "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
     "nestjsx-automapper": "^3.1.4",
     "nodemailer": "^6.9.7",
