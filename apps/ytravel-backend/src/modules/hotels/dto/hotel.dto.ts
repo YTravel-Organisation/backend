@@ -1,12 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { AutoMap } from "nestjsx-automapper";
 import { 
+    IsArray,
+    IsEmail,
+    IsEnum,
     IsInt,
     IsLatitude,
     IsLongitude, 
     IsNotEmpty, 
+    IsNumber, 
     IsOptional, 
-    IsPhoneNumber 
+    IsPhoneNumber, 
+    IsString,
 } from "class-validator";
 import { MethodPayment } from "@prisma/client";
 
@@ -15,7 +20,7 @@ export class CreateHotelDto {
     @AutoMap()
     @IsNotEmpty()  
     @IsInt()
-    admin_id: number;
+    userId: number;
 
     @ApiProperty()
     @AutoMap()
@@ -35,18 +40,22 @@ export class CreateHotelDto {
     @ApiProperty()
     @AutoMap()
     @IsNotEmpty()
+    @IsEmail()
     email: string;
 
     @ApiProperty()
     @AutoMap()
     @IsNotEmpty()
+    @IsString()
     website: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: [String], description: 'Array of phone numbers' })
     @AutoMap()
+    @IsArray()
     @IsNotEmpty()
-    @IsPhoneNumber()
-    phone_number: string;
+    @IsString({ each: true }) // Validates that each item in the array is a string
+    @IsPhoneNumber(null, { each: true }) // Optionally, validate each as a phone number (remove if not needed)
+    phoneNumber: string[];
 
     @ApiProperty()
     @AutoMap()
@@ -60,20 +69,24 @@ export class CreateHotelDto {
     @IsLatitude()
     latitude: number;
 
-    @ApiProperty()
+    @ApiProperty({ type: [String] })
     @AutoMap()
+    @IsArray()
     @IsNotEmpty()
-    faq: [string];
+    faq: string[];
 
-    @ApiProperty()
+    @ApiProperty({ enum: MethodPayment, isArray: true })
     @AutoMap()
+    @IsArray()
+    @IsEnum(MethodPayment, { each: true })
     @IsNotEmpty()
-    paymentMethod: [MethodPayment];
+    paymentMethod: MethodPayment[];
 
-    @ApiProperty()
+    @ApiProperty({ type: [String] })
     @AutoMap()
+    @IsArray()
     @IsNotEmpty()
-    other_information: string;
+    otherInformation: string[];
 }
 
 export class UpdateHotelDto {
