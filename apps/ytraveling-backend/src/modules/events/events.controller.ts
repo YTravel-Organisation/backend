@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { EventService } from './events.service';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
 import { ApiTags } from '@nestjs/swagger';

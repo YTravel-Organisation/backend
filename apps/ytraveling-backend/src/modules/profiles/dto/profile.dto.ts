@@ -13,7 +13,7 @@ export class CreateProfileDto {
   @ApiProperty()
   @AutoMap()
   @IsNumber()
-  userId?: number;
+  userId: number;
 
   @ApiProperty()
   @AutoMap()
@@ -83,7 +83,7 @@ export class UpdateProfileDto {
   @ApiProperty()
   @AutoMap()
   @IsNumber()
-  userId?: number;
+  userId: number;
 
   @ApiProperty()
   @AutoMap()

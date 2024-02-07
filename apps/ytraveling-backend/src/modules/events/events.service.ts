@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from '../../tools/database.config';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
 
@@ -15,6 +19,7 @@ export class EventService {
     try {
       this.validateDates(createEventDto.startDate, createEventDto.endDate);
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { hotelId, ...rest } = createEventDto;
 
       const SearchHotel = await this.prisma.hotel.findUnique({
@@ -41,6 +46,7 @@ export class EventService {
     try {
       this.validateDates(updateEventDto.startDate, updateEventDto.endDate);
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { hotelId, ...rest } = updateEventDto;
 
       return await this.prisma.event.update({

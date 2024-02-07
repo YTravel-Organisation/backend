@@ -15,7 +15,7 @@ export class SmtpService {
 
   async SendEmail(to: string, subject: string, text: string) {
     const info = await this.transporter.sendMail({
-      from: 'no-reply@ytravel.com',
+      from: 'no-reply@ytraveling.com',
       to: to,
       subject: subject,
       text: text,
