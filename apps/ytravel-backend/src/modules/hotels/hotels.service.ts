@@ -11,13 +11,29 @@ export class HotelsService {
     ) {}
 
     async createHotel(createHotelDto: CreateHotelDto) {
+        const { userId, ...rest } = createHotelDto;
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+    
+        if (!user) {
+            throw new Error('User not found');
+        }
+    
         const hotel = await this.prisma.hotel.create({
             data: {
-                ...createHotelDto,
+                ...rest,
+                user: {
+                    connect: { id: userId },
+                },
                 rating: 0,
                 bannerImage: '',
             },
         });
+    
         return hotel;
     }
     
