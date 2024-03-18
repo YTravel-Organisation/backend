@@ -16,7 +16,6 @@ export class ProfileService {
     await this.prisma.profile.create({
       data: {
         user: { connect: { id: SearchUser.id } },
-        userId,
         ...rest,
       },
     });
