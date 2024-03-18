@@ -1,5 +1,5 @@
 version: '3.8'
- 
+
 services:
   postgres:
     image: postgres:latest
@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - ytravel-network
+      - ytraveling-network
     healthcheck:
       test:
         [
@@ -37,8 +37,8 @@ services:
     environment:
       REDIS_PASSWORD: ytravel_redis_password
     networks:
-      - ytravel-network
- 
+      - ytraveling-network
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -49,8 +49,8 @@ services:
     depends_on:
       - postgres
     networks:
-      - ytravel-network
- 
+      - ytraveling-network
+
   rabbitmq:
     image: rabbitmq:3-management
     healthcheck:
@@ -59,35 +59,50 @@ services:
       - '5672:5672'
       - '15672:15672'
     networks:
-      - ytravel-network
+      - ytraveling-network
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
- 
-  ytravel:
+  
+  prisma-db-push:
     build:
       context: .
-      dockerfile: apps/ytravel-backend/Dockerfile
+      dockerfile: Dockerfile
+      target: dbgenerator
+    networks:
+      - ytraveling-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+
+  ytraveling:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ytraveling
     ports:
       - '3000:3000'
     networks:
-      - ytravel-network
+      - ytraveling-network
     depends_on:
       - postgres
       - redis
       - rabbitmq
- 
+      - prisma-db-push
+
   smtp-services:
     build:
       context: .
-      dockerfile: apps/smtp/Dockerfile
+      dockerfile: Dockerfile
+      target: smtp
     networks:
-      - ytravel-network
+      - ytraveling-network
     depends_on:
       - postgres
       - redis
       - rabbitmq
- 
+
   mailhog:
     image: mailhog/mailhog:latest
     container_name: 'mailhog'
@@ -95,8 +110,8 @@ services:
       - '8025:8025'
       - '1025:1025'
     networks:
-      - ytravel-network
- 
+      - ytraveling-network
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -104,14 +119,14 @@ services:
     ports:
       - '9090:9090'
     networks:
-      - ytravel-network
+      - ytraveling-network
     depends_on:
       - postgres
       - redis
       - mailhog
       - postgres-exporter
       - redis-exporter
- 
+
   postgres-exporter:
     image: wrouesnel/postgres_exporter:latest
     environment:
@@ -121,8 +136,8 @@ services:
     depends_on:
       - postgres
     networks:
-      - ytravel-network
- 
+      - ytraveling-network
+
   redis-exporter:
     image: oliver006/redis_exporter:latest
     ports:
@@ -130,8 +145,8 @@ services:
     depends_on:
       - redis
     networks:
-      - ytravel-network
- 
+      - ytraveling-network
+
   grafana:
     image: grafana/grafana:latest
     volumes:
@@ -145,14 +160,14 @@ services:
     ports:
       - '3001:3000'
     networks:
-      - ytravel-network
+      - ytraveling-network
     depends_on:
       - prometheus
- 
+
 networks:
-  ytravel-network:
+  ytraveling-network:
     driver: bridge
- 
+
 volumes:
   postgres_data:
   redis_data:
