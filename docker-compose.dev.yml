@@ -68,7 +68,8 @@ services:
   ytraveling:
     build:
       context: .
-      dockerfile: apps/ytraveling-backend/dev.Dockerfile
+      dockerfile: Dockerfile.dev
+      target: ytraveling
     ports:
       - '3000:3000'
     networks:
@@ -83,7 +84,8 @@ services:
   smtp-services:
     build:
       context: .
-      dockerfile: apps/smtp/dev.Dockerfile
+      dockerfile: Dockerfile.dev
+      target: smtp
     networks:
       - ytraveling-network
     depends_on:
