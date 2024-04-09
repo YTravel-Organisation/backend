@@ -16,6 +16,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class HotelsController {
   constructor(private readonly hotelsService: HotelsService) {}
 
+  @Get()
+  checkHeartbeat(): string {
+    return 'heartbeat is running badump badump <3 !';
+  }
+
   @Post()
   async createHotel(@Body() createHotelDto: CreateHotelDto) {
     try {
@@ -63,6 +68,10 @@ export class HotelsController {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+
+
+
 
   // @Post('upload/:id')
   // async uploadHotelImage(@Param('id') id: number) {

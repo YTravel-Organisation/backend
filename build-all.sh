@@ -1,4 +1,4 @@
-#!/bin/sh
+
 
 # Loop over subdirectories in ./apps
 for service_path in ./apps/*; do
