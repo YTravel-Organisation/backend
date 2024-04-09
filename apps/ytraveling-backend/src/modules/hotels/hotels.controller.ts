@@ -69,10 +69,6 @@ export class HotelsController {
     }
   }
 
-
-
-
-
   // @Post('upload/:id')
   // async uploadHotelImage(@Param('id') id: number) {
   //   console.log(id);
