@@ -16,6 +16,7 @@ import { UserModule } from './modules/users/users.module';
 import { EmailModule } from './modules/email/email.module';
 import { PrometheusMiddleware } from './middleware/prometheus.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { SocketModule } from './modules/socket/socket.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -51,6 +52,7 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     JwtModule,
     ProfilesModule,
+    SocketModule
   ],
   controllers: [],
   providers: [],
