@@ -7,7 +7,7 @@ import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
 // import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
-// import { ReservationsModule } from './reservations/reservations.module';
+import { ReservationModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomModule } from './modules/rooms/rooms.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
@@ -42,7 +42,7 @@ import { JwtModule } from '@nestjs/jwt';
     EventsModule,
     // HotelsModule,
     // NotificationsModule,
-    // ReservationsModule,
+    ReservationModule,
     PaymentsModule,
     RoomModule,
     RolesModule,
