@@ -91,12 +91,6 @@ export class CreateHotelDto {
 export class UpdateHotelDto {
     @ApiProperty()
     @AutoMap()
-    @IsOptional()  
-    @IsInt()
-    admin_id?: number;
-
-    @ApiProperty()
-    @AutoMap()
     @IsOptional()
     name?: string;
 
@@ -120,11 +114,13 @@ export class UpdateHotelDto {
     @IsOptional()
     website?: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: [String], description: 'Array of phone numbers' })
     @AutoMap()
     @IsOptional()
-    @IsPhoneNumber()
-    phone_number?: string;
+    @IsArray()
+    @IsString({ each: true }) // Validates that each item in the array is a string
+    @IsPhoneNumber(null, { each: true }) // Optionally, validate each as a phone number (remove if not needed)
+    phoneNumber?: string[];
 
     @ApiProperty()
     @AutoMap()
@@ -138,13 +134,23 @@ export class UpdateHotelDto {
     @IsLatitude()
     latitude?: number;
 
-    @ApiProperty()
+    @ApiProperty({ type: [String] })
     @AutoMap()
     @IsOptional()
-    faq?: string;
+    @IsArray()
+    faq?: string[];
 
-    @ApiProperty()
+    @ApiProperty({ enum: MethodPayment, isArray: true })
     @AutoMap()
     @IsOptional()
-    other_information?: string;
+    @IsArray()
+    @IsEnum(MethodPayment, { each: true })
+    paymentMethod?: MethodPayment[];
+
+    @ApiProperty({ type: [String] })
+    @AutoMap()
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    otherInformation?: string[];
 }

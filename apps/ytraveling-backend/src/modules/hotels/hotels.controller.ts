@@ -4,10 +4,10 @@ import {
   Delete,
   Get,
   InternalServerErrorException,
-  Param,
+  Param, Patch,
   Post,
 } from '@nestjs/common';
-import { CreateHotelDto } from './dto/hotel.dto';
+import {CreateHotelDto, UpdateHotelDto} from './dto/hotel.dto';
 import { HotelsService } from './hotels.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -15,11 +15,6 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('hotels')
 export class HotelsController {
   constructor(private readonly hotelsService: HotelsService) {}
-
-  @Get()
-  checkHeartbeat(): string {
-    return 'heartbeat is running badump badump <3 !';
-  }
 
   @Post()
   async createHotel(@Body() createHotelDto: CreateHotelDto) {
@@ -57,10 +52,10 @@ export class HotelsController {
     }
   }
 
-  @Post(':id')
+  @Patch(':id')
   async updateHotel(
     @Param('id') id: number,
-    @Body() updateHotelDto: CreateHotelDto,
+    @Body() updateHotelDto: UpdateHotelDto,
   ) {
     try {
       return await this.hotelsService.updateHotel(id, updateHotelDto);
@@ -68,14 +63,4 @@ export class HotelsController {
       throw new InternalServerErrorException(error.message);
     }
   }
-
-  // @Post('upload/:id')
-  // async uploadHotelImage(@Param('id') id: number) {
-  //   console.log(id);
-  //   try {
-  //     return await this.hotelsService.uploadHotelImage(id);
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message);
-  //   }
-  // }
 }

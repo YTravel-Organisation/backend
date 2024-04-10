@@ -4,10 +4,11 @@ import { CreateHotelDto } from './dto/hotel.dto';
 
 @Injectable()
 export class HotelsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
 
   async createHotel(createHotelDto: CreateHotelDto) {
-    const { userId, ...rest } = createHotelDto;
+    const {userId, ...rest} = createHotelDto;
 
     const user = await this.prisma.user.findUnique({
       where: {
@@ -18,12 +19,15 @@ export class HotelsService {
     if (!user) {
       throw new Error('User not found');
     }
+    if (user.email !== rest.email) {
+      throw new Error('Email does not match');
+    }
 
     const hotel = await this.prisma.hotel.create({
       data: {
         ...rest,
         user: {
-          connect: { id: userId },
+          connect: {id: userId},
         },
         rating: 0,
         bannerImage: '',
@@ -46,6 +50,7 @@ export class HotelsService {
     });
     return hotel;
   }
+
   async deleteHotel(id: number) {
     const hotel = this.prisma.hotel.delete({
       where: {
@@ -56,15 +61,25 @@ export class HotelsService {
   }
 
   async updateHotel(id: number, updateHotelDto) {
-    const hotel = this.prisma.hotel.update({
+    const hotel = await this.prisma.hotel.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!hotel) {
+      throw new Error('Hotel not found');
+    }
+
+    const updatedHotel = await this.prisma.hotel.update({
       where: {
         id: id,
       },
       data: {
         ...updateHotelDto,
-        updatedAt: new Date(),
       },
     });
-    return hotel;
+
+    return updatedHotel;
   }
 }
