@@ -62,8 +62,8 @@ services:
     networks:
       - ytraveling-network
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_USER: "ytravel_rabbitmq_user"
+      RABBITMQ_DEFAULT_PASS: "ytravel_rabbitmq_password"
 
   ytraveling:
     build:
@@ -84,6 +84,19 @@ services:
     build:
       context: .
       dockerfile: apps/smtp/dev.Dockerfile
+    networks:
+      - ytraveling-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    volumes:
+      - ./apps:/app/apps
+
+  search-services:
+    build:
+      context: .
+      dockerfile: apps/search/Dockerfile
     networks:
       - ytraveling-network
     depends_on:

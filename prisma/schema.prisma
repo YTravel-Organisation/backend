@@ -349,10 +349,8 @@ enum TransportType {
 }
 
 enum AvailabilityStatus {
-  AVAILABLE
   UNAVAILABLE
-  CANCELLED
-  VALIDATED
+  MAINTENANCE
 }
 
 enum NotificationType {

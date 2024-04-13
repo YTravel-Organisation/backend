@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { EmailService } from '../email/email.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';

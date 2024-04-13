@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreateRoomDto, UpdateRoomDto } from './dto/room.dto';
 
 @Injectable()
