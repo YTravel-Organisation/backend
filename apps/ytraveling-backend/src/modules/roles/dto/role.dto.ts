@@ -75,3 +75,15 @@ export class AssignRoleDto {
   @IsInt()
   roleId: number;
 }
+
+export class RevokeRoleDto {
+  @ApiProperty()
+  @AutoMap()
+  @IsInt()
+  userId: number;
+
+  @ApiProperty()
+  @AutoMap()
+  @IsInt()
+  roleId: number;
+}

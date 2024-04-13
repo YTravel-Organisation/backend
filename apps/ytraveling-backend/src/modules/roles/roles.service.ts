@@ -102,4 +102,23 @@ export class RoleService {
       throw new InternalServerErrorException('Internal Server Error');
     }
   }
+
+  async revokeRole(revokeRoleDto: any) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: revokeRoleDto.userId },
+      });
+      if (!user) {
+        throw new NotFoundException("User doesn't exist");
+      }
+      this.prisma.user.update({
+        where: { id: revokeRoleDto.userId },
+        data: {
+          roleId: null,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+  }
 }

@@ -69,6 +69,15 @@ export class RoleController {
     }
   }
 
+  @Put('/revoke/')
+  revokeRole(@Body() revokeRoleDto: any) {
+    try {
+      return this.roleService.revokeRole(revokeRoleDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     try {
