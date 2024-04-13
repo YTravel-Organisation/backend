@@ -60,6 +60,15 @@ export class RoleController {
     }
   }
 
+  @Put('/assign/')
+  assignRole(@Body() assignRoleDto: any) {
+    try {
+      return this.roleService.assignRole(assignRoleDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     try {
