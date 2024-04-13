@@ -62,6 +62,15 @@ export class UserController {
     }
   }
 
+  @Get(':email')
+  findByEmail(@Param('email') email: string) {
+    try {
+      return this.userService.findOneByEmail(email);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {

@@ -26,9 +26,7 @@ export class UserService {
       },
     });
 
-    await this.emailService.sendVerificationEmail(
-      createUserDto.email
-    );
+    await this.emailService.sendVerificationEmail(createUserDto.email);
 
     return 'AccountCreated';
   }
