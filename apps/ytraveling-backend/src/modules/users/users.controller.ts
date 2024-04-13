@@ -106,4 +106,13 @@ export class UserController {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+  @Get('export')
+  export(@Param('id') id: string) {
+    try {
+      return this.userService.export(+id);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 }

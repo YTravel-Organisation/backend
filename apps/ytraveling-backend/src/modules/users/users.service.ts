@@ -109,4 +109,12 @@ export class UserService {
     });
     return 'UserStatusUpdated';
   }
+
+  async export(id: number) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    return 'UserExported';
+  }
 }
