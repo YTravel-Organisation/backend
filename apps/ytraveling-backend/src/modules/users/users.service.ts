@@ -89,4 +89,12 @@ export class UserService {
     });
     return 'VerificationSucceeded';
   }
+
+  async getByRole(role: number) {
+    return this.prisma.user.findMany({
+      where: {
+        roleId: role,
+      },
+    });
+  }
 }

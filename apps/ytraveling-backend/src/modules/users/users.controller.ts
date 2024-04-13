@@ -88,4 +88,13 @@ export class UserController {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+  @Get('/roles/:id')
+  getByRoles(@Param('id') id: string) {
+    try {
+      return this.userService.getByRole(+id);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 }
