@@ -97,4 +97,13 @@ export class UserController {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+  @Put('status/:id')
+  updateStatus(@Param('id') id: string, @Body() status: boolean) {
+    try {
+      return this.userService.updateStatus(+id, status);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 }

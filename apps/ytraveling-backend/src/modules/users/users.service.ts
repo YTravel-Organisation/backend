@@ -97,4 +97,16 @@ export class UserService {
       },
     });
   }
+
+  async updateStatus(id: number, status: boolean) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    await this.prisma.user.update({
+      where: { id },
+      data: { verified: status },
+    });
+    return 'UserStatusUpdated';
+  }
 }
