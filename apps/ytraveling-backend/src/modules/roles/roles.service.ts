@@ -4,7 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../tools/database.config';
-import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
+import {
+  AssignRoleDto,
+  CreateRoleDto,
+  RevokeRoleDto,
+  UpdateRoleDto,
+} from './dto/role.dto';
 
 @Injectable()
 export class RoleService {
@@ -78,7 +83,7 @@ export class RoleService {
     }
   }
 
-  async assignRole(assignRoleDto: any) {
+  async assignRole(assignRoleDto: AssignRoleDto) {
     try {
       const role = await this.prisma.role.findUnique({
         where: { id: assignRoleDto.roleId },
@@ -103,7 +108,7 @@ export class RoleService {
     }
   }
 
-  async revokeRole(revokeRoleDto: any) {
+  async revokeRole(revokeRoleDto: RevokeRoleDto) {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: revokeRoleDto.userId },
