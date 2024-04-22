@@ -49,10 +49,20 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({ where: { id } });
+
     if (!user) {
       throw new NotFoundException("User doesn't exist");
     }
-    await this.prisma.user.update({ where: { id }, data: updateUserDto });
+
+    const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...updateUserDto,
+        password: hashedPassword,
+      },
+    });
     return 'UserUpdated';
   }
 
