@@ -2,112 +2,93 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../tools/database.config';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
 
 @Injectable()
 export class EventService {
-  constructor(private prisma: PrismaService) {}
-  private validateDates(startDate: Date, endDate: Date) {
+  constructor(private readonly prisma: PrismaService) {}
+
+  private async validateHotelExistence(hotelId: number): Promise<void> {
+    const exists = await this.prisma.hotel.findUnique({
+      where: { id: hotelId },
+    });
+    if (!exists) {
+      throw new NotFoundException(`Hotel with ID ${hotelId} not found.`);
+    }
+  }
+
+  private validateDates(startDate: Date, endDate: Date): void {
     if (startDate > endDate) {
-      throw new BadRequestException('Start date must be before end date');
+      throw new BadRequestException('Start date must be before end date.');
     }
   }
 
   async create(createEventDto: CreateEventDto) {
+    this.validateDates(createEventDto.startDate, createEventDto.endDate);
+
+    const { hotelId, ...rest } = createEventDto;
+    const data: any = { ...rest };
+
+    if (hotelId) {
+      await this.validateHotelExistence(hotelId);
+      data.hotel = { connect: { id: hotelId } };
+    }
+
     try {
-      this.validateDates(createEventDto.startDate, createEventDto.endDate);
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { hotelId, ...rest } = createEventDto;
-
-      const SearchHotel = await this.prisma.hotel.findUnique({
-        where: { id: createEventDto.hotelId },
-      });
-
-      return await this.prisma.event.create({
-        data: {
-          hotel: { connect: { id: SearchHotel.id } },
-          ...rest,
-        },
-      });
+      return await this.prisma.event.create({ data });
     } catch (error) {
       console.error(error);
-      if (error instanceof BadRequestException) {
-        throw error;
-      } else {
-        throw new InternalServerErrorException('Internal Server Error');
-      }
+      throw new InternalServerErrorException('Failed to create event.');
     }
   }
 
-  async update(EventId: number, updateEventDto: UpdateEventDto) {
+  async update(eventId: number, updateEventDto: UpdateEventDto) {
+    this.validateDates(updateEventDto.startDate, updateEventDto.endDate);
+
+    const { hotelId, ...rest } = updateEventDto;
+    const data: any = { ...rest };
+
+    if (hotelId) {
+      await this.validateHotelExistence(hotelId);
+      data.hotel = { connect: { id: hotelId } };
+    }
+
     try {
-      this.validateDates(updateEventDto.startDate, updateEventDto.endDate);
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { hotelId, ...rest } = updateEventDto;
-
       return await this.prisma.event.update({
-        where: { id: EventId },
-        data: {
-          hotel: { connect: { id: updateEventDto.hotelId } },
-          ...rest,
-        },
+        where: { id: eventId },
+        data,
       });
     } catch (error) {
       console.error(error);
-      if (error instanceof BadRequestException) {
-        throw error;
-      } else {
-        throw new InternalServerErrorException('Internal Server Error');
-      }
+      throw new InternalServerErrorException('Failed to update event.');
     }
   }
 
   async findAll() {
-    try {
-      const events = await this.prisma.event.findMany();
-
-      if (!events || events.length === 0) {
-        return { status: 204, message: 'No event found' };
-      }
-
-      return { status: 200, message: 'EventsFound', data: events };
-    } catch (error) {
-      console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
-    }
+    const events = await this.prisma.event.findMany();
+    return events.length > 0
+      ? { status: 200, message: 'Events Found', data: events }
+      : { status: 204, message: 'No event found' };
   }
 
   async findOne(id: number) {
-    try {
-      const event = await this.prisma.event.findUnique({ where: { id } });
-
-      if (!event) {
-        return { status: 404, message: "Event doesn't exist" };
-      }
-
-      return { status: 200, message: 'EventFound', data: event };
-    } catch (error) {
-      console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
+    const event = await this.prisma.event.findUnique({ where: { id } });
+    if (!event) {
+      throw new NotFoundException("Event doesn't exist.");
     }
+    return { status: 200, message: 'Event Found', data: event };
   }
 
   async remove(id: number) {
     try {
       const deletedEvent = await this.prisma.event.delete({ where: { id } });
-
-      if (!deletedEvent) {
-        return { status: 204, message: 'No event found' };
-      } else {
-        return { status: 200, message: 'Eventeleted', data: deletedEvent };
-      }
+      return { status: 200, message: 'Event Deleted', data: deletedEvent };
     } catch (error) {
       console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
+      throw new NotFoundException('Event to delete does not exist.');
     }
   }
 }

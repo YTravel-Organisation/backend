@@ -1,11 +1,22 @@
-import { IsDate, IsDecimal, IsInt, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsDecimal,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import { AutoMap } from 'nestjsx-automapper';
 import { ApiProperty } from '@nestjs/swagger';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export class CreateEventDto {
   @ApiProperty()
   @AutoMap()
   @IsNumber()
+  @IsOptional()
   hotelId?: number;
 
   @ApiProperty()
@@ -21,22 +32,22 @@ export class CreateEventDto {
   @ApiProperty()
   @AutoMap()
   @IsDecimal()
-  price: number;
+  price: Decimal;
 
   @ApiProperty()
   @AutoMap()
-  @IsString()
+  @IsArray()
   eventTypes: string[];
 
   @ApiProperty()
   @AutoMap()
   @IsDecimal()
-  longitude: number;
+  longitude: Decimal;
 
   @ApiProperty()
   @AutoMap()
   @IsDecimal()
-  latitude: number;
+  latitude: Decimal;
 
   @ApiProperty()
   @AutoMap()
@@ -51,67 +62,80 @@ export class CreateEventDto {
   @ApiProperty()
   @AutoMap()
   @IsDate()
+  @Type(() => Date)
   startDate: Date;
 
   @ApiProperty()
   @AutoMap()
   @IsDate()
+  @Type(() => Date)
   endDate: Date;
 }
 
 export class UpdateEventDto {
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsNumber()
   hotelId?: number;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsDecimal()
-  price: number;
+  price?: number;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsString()
-  eventTypes: string[];
+  eventTypes?: string[];
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsDecimal()
-  longitude: number;
+  longitude?: number;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsDecimal()
-  latitude: number;
+  latitude?: number;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsInt()
-  maxCapacity: number;
+  maxCapacity?: number;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsString()
-  organizerName: string;
+  organizerName?: string;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsDate()
-  startDate: Date;
+  startDate?: Date;
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsDate()
-  endDate: Date;
+  endDate?: Date;
 }
