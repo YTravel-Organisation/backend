@@ -131,11 +131,13 @@ export class UpdateEventDto {
   @AutoMap()
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   startDate?: Date;
 
   @ApiProperty()
   @AutoMap()
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   endDate?: Date;
 }
