@@ -45,6 +45,6 @@ async function bootstrap() {
     res.end(await register.metrics());
   });
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
