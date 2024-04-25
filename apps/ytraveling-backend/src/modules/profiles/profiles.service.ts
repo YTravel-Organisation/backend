@@ -1,35 +1,85 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
+import { PrismaService } from '../../tools/database.config';
 import { CreateProfileDto, UpdateProfileDto } from './dto/profile.dto';
+import { isPast } from 'date-fns';
 
 @Injectable()
 export class ProfileService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(createProfileDto: CreateProfileDto): Promise<string> {
-    const { userId, ...rest } = createProfileDto;
-
-    const SearchUser = await this.prisma.user.findUnique({
+  private async ensureUserExists(userId: number): Promise<void> {
+    const userExists = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-
-    await this.prisma.profile.create({
-      data: {
-        user: { connect: { id: SearchUser.id } },
-        userId,
-        ...rest,
-      },
-    });
-
-    return 'ProfileCreated';
+    if (!userExists) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
   }
 
-  async findAll(limit, page) {
+  private validateDateOfBirth(dateOfBirth: Date): void {
+    if (!isPast(dateOfBirth)) {
+      throw new BadRequestException('Date of birth cannot be in the future.');
+    }
+  }
+
+  async create(createProfileDto: CreateProfileDto): Promise<string> {
+    this.validateDateOfBirth(createProfileDto.dateOfBirth);
+    await this.ensureUserExists(createProfileDto.userId);
+
+    try {
+      await this.prisma.profile.create({
+        data: {
+          user: { connect: { id: createProfileDto.userId } },
+          ...createProfileDto,
+        },
+      });
+      return 'Profile created successfully.';
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Failed to create profile.');
+    }
+  }
+
+  async update(
+    profileId: number,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<string> {
+    if (updateProfileDto.dateOfBirth) {
+      this.validateDateOfBirth(updateProfileDto.dateOfBirth);
+      await this.ensureUserExists(updateProfileDto.userId);
+    }
+
+    try {
+      await this.prisma.profile.update({
+        where: { id: profileId },
+        data: {
+          user: { connect: { id: profileId } },
+          ...updateProfileDto,
+        },
+      });
+      return 'Profile updated successfully.';
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Failed to update profile.');
+    }
+  }
+
+  async findAll(limit: number, page: number) {
     const skip = limit * (page - 1);
-    return this.prisma.profile.findMany({
+    const profiles = await this.prisma.profile.findMany({
       skip: skip,
       take: limit,
     });
+
+    return profiles.map((profile) => ({
+      ...profile,
+      postalCode: profile.postalCode.toString(),
+    }));
   }
 
   async findOne(id: number) {
@@ -37,33 +87,11 @@ export class ProfileService {
     if (!profile) {
       throw new NotFoundException("Profile doesn't exist");
     }
-    return profile;
-  }
 
-  async update(
-    profileId: number,
-    updateProfileDto: UpdateProfileDto,
-  ): Promise<string> {
-    const { userId, ...rest } = updateProfileDto;
-
-    const searchUser = await this.prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!searchUser) {
-      throw new Error('UserNotFound');
-    }
-
-    await this.prisma.profile.update({
-      where: {
-        id: profileId,
-      },
-      data: {
-        user: { connect: { id: userId } },
-        ...rest,
-      },
-    });
-    return 'ProfileUpdated';
+    return {
+      ...profile,
+      postalCode: profile.postalCode.toString(),
+    };
   }
 
   async remove(id: number) {
@@ -76,15 +104,37 @@ export class ProfileService {
   }
 
   async addProfileImage(id: number, profileImage: string) {
+    console.log('Profile Image:', profileImage);
+    if (!profileImage.startsWith('http')) {
+      throw new BadRequestException(
+        'Invalid URL provided for the profile image.',
+      );
+    }
+
     const profile = await this.prisma.profile.findUnique({ where: { id } });
     if (!profile) {
       throw new NotFoundException("Profile doesn't exist");
     }
-    await this.prisma.profile.update({
-      where: { id },
-      data: { profileImage },
-    });
-    return 'ProfileImageAdded';
+
+    try {
+      const updatedProfile = await this.prisma.profile.update({
+        where: { id },
+        data: {
+          profileImage: profileImage,
+        },
+      });
+
+      if (updatedProfile.profileImage !== profileImage) {
+        throw new Error('Failed to update profile image.');
+      }
+
+      return 'Profile image updated successfully.';
+    } catch (error) {
+      console.error('Error updating profile image:', error);
+      throw new InternalServerErrorException(
+        'Failed to update profile image due to an unexpected error.',
+      );
+    }
   }
 
   async addLastSearch(id: number, lastSearch: string) {

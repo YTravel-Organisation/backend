@@ -4,7 +4,7 @@ export const smtpMicroserviceOptions: RmqOptions = {
   transport: Transport.RMQ,
   options: {
     urls: [
-      `amqp://ytravel_rabbitmq_user:ytravel_rabbitmq_password@rabbitmq:5672`,
+      'amqps://bzaqmyki:vEkyD8WQClTuLK5zyvrSNH6xvsOlEVJY@whale.rmq.cloudamqp.com/bzaqmyki',
     ],
     queue: 'smtp_queue',
   },

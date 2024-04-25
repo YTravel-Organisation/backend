@@ -72,7 +72,10 @@ export class ProfileController {
   }
 
   @Patch(':id/profile-image')
-  addProfileImage(@Param('id') id: string, @Body() profileImage: string) {
+  addProfileImage(
+    @Param('id') id: string,
+    @Body('profileImage') profileImage: string,
+  ) {
     try {
       return this.profileService.addProfileImage(+id, profileImage);
     } catch (error) {
@@ -81,7 +84,10 @@ export class ProfileController {
   }
 
   @Patch(':id/last-search')
-  addLastSearch(@Param('id') id: string, @Body() lastSearch: string) {
+  addLastSearch(
+    @Param('id') id: string,
+    @Body('lastSearch') lastSearch: string,
+  ) {
     try {
       return this.profileService.addLastSearch(+id, lastSearch);
     } catch (error) {
@@ -90,7 +96,10 @@ export class ProfileController {
   }
 
   @Delete(':id/last-search')
-  removeLastSearch(@Param('id') id: string, @Body() lastSearch: string) {
+  removeLastSearch(
+    @Param('id') id: string,
+    @Body('lastSearch') lastSearch: string,
+  ) {
     try {
       return this.profileService.removeLastSearch(+id, lastSearch);
     } catch (error) {

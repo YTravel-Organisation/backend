@@ -26,10 +26,7 @@ export class UserService {
       },
     });
 
-    await this.emailService.sendVerificationEmail(
-      createUserDto.email,
-      verificationToken,
-    );
+    await this.emailService.sendVerificationEmail(createUserDto.email);
 
     return 'AccountCreated';
   }
@@ -52,10 +49,20 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({ where: { id } });
+
     if (!user) {
       throw new NotFoundException("User doesn't exist");
     }
-    await this.prisma.user.update({ where: { id }, data: updateUserDto });
+
+    const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...updateUserDto,
+        password: hashedPassword,
+      },
+    });
     return 'UserUpdated';
   }
 
@@ -91,5 +98,33 @@ export class UserService {
       data: { verified: true, verificationToken: null },
     });
     return 'VerificationSucceeded';
+  }
+
+  async getByRole(role: number) {
+    return this.prisma.user.findMany({
+      where: {
+        roleId: role,
+      },
+    });
+  }
+
+  async updateStatus(id: number, status: boolean) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    await this.prisma.user.update({
+      where: { id },
+      data: { verified: status },
+    });
+    return 'UserStatusUpdated';
+  }
+
+  async export(id: number) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist");
+    }
+    return 'UserExported';
   }
 }

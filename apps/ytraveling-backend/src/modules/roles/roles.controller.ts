@@ -8,9 +8,15 @@ import {
   Delete,
   InternalServerErrorException,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { RoleService } from './roles.service';
-import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
+import {
+  AssignRoleDto,
+  CreateRoleDto,
+  RevokeRoleDto,
+  UpdateRoleDto,
+} from './dto/role.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Roles')
@@ -55,6 +61,24 @@ export class RoleController {
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     try {
       return this.roleService.update(+id, updateRoleDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Patch('/assign/')
+  assignRole(@Body() assignRoleDto: AssignRoleDto) {
+    try {
+      return this.roleService.assignRole(assignRoleDto);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Put('/revoke/')
+  revokeRole(@Body() revokeRoleDto: RevokeRoleDto) {
+    try {
+      return this.roleService.revokeRole(revokeRoleDto);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

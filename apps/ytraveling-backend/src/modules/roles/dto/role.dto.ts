@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsOptional, IsBoolean} from 'class-validator';
+import { IsInt, IsString, IsOptional, IsBoolean } from 'class-validator';
 import { AutoMap } from 'nestjsx-automapper';
-
 
 export class CreateRoleDto {
   @ApiProperty()
@@ -37,19 +36,20 @@ export class UpdateRoleDto {
   @ApiProperty()
   @AutoMap()
   @IsString()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @ApiProperty()
   @AutoMap()
   @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @ApiProperty()
   @AutoMap()
   @IsOptional()
   @IsInt()
-  privilegeLevel: number;
+  privilegeLevel?: number;
 
   @ApiProperty()
   @AutoMap()
@@ -62,5 +62,28 @@ export class UpdateRoleDto {
   @IsString()
   @IsOptional()
   modificationHistory?: string;
+}
 
+export class AssignRoleDto {
+  @ApiProperty()
+  @AutoMap()
+  @IsInt()
+  userId: number;
+
+  @ApiProperty()
+  @AutoMap()
+  @IsInt()
+  roleId: number;
+}
+
+export class RevokeRoleDto {
+  @ApiProperty()
+  @AutoMap()
+  @IsInt()
+  userId: number;
+
+  @ApiProperty()
+  @AutoMap()
+  @IsInt()
+  roleId: number;
 }
