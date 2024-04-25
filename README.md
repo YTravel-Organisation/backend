@@ -1,73 +1,64 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<h1 align="center" id="title">Backend - Ytravel</h1>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p align="center"><img src="" alt="project-image"></p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p id="description">Le projet YTravel est une plateforme innovante conçue pour révolutionner l'expérience de réservation dans l'industrie du voyage et de l'hôtellerie. Elle offre une solution tout-en-un permettant aux utilisateurs de rechercher comparer et réserver des hôtels des moyens de transport et des activités à partir d'une interface unique. Pour les hôteliers YTravel fournit des outils de gestion avancés pour optimiser leurs opérations gérer les réservations et améliorer la satisfaction clientèle.</p>
 
-## Description
+<p align="center"><img src="https://img.shields.io/codecov/c/github/YTravel-Organisation/backend" alt="shields"><img src="https://img.shields.io/github/license/YTravel-Organisation/backend" alt="shields"><img src="https://img.shields.io/github/package-json/v/YTravel-Organisation/backend/main" alt="shields"><img src="https://img.shields.io/github/commit-activity/y/YTravel-Organisation/backend" alt="shields"></p>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<h2>🚀 Demo</h2>
 
-## Installation
+[http://Ytravel.com/demo](http://Ytravel.com/demo)
 
-```bash
-$ npm install
+<h2>🧐 Features</h2>
+
+Here're some of the project's best features:
+
+*   Recherche et Filtrage Intelligents : Utilise le traitement du langage naturel pour permettre aux utilisateurs de faire des recherches complexes avec des options de filtrage avancées comme le prix les équipements et les avis.
+*   Sélection de Transport : Offre aux utilisateurs la possibilité de choisir différents modes de transport (avion train voiture) avec des options de classe de voyage et l'affichage de l'empreinte carbone.
+*   Gestion de Comptes : Propose des abonnements payants pour hôtels et utilisateurs un système de fidélité et différents types de comptes (étudiant séminaire etc.).
+*   Réservation et Gestion d'Hébergement : Permet la vérification d'établissements via des API la suggestion d'activités locales et une gestion en ligne des disponibilités et des chambres.
+*   Réservation / Gestion de Prestations et Activités : Un catalogue complet d'activités locales avec personnalisation de forfaits réservation en ligne et intégration de partenaires externes.
+*   Gestion Interne pour Hôteliers : Comprend la planification du personnel la gestion des stocks la maintenance de l'hôtel et la gestion des chambres d'hôtel avec visualisation 3D.
+
+<h2>🛠️ Installation Steps:</h2>
+
+<p>1. Clonage du dépot du projet</p>
+
+```
+git clone https://github.com/YTravel-Organisation/backend
 ```
 
-## Running the app
+<p>2. Accédez au répertoire du projet</p>
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+cd ./backend
 ```
 
-## Test
+<p>3. Construction du docker</p>
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+docker-composer up -d
 ```
 
-## Support
+<p>4. Accès au projet</p>
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+http://localhost:3000
+```
 
-## Stay in touch
+  
+  
+<h2>💻 Built with</h2>
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Technologies used in the project:
 
-## License
+*   NestJS
+*   Postgres
+*   Prisma
+*   MailerJS
+*   Docker
 
-Nest is [MIT licensed](LICENSE).
+<h2>🛡️ License:</h2>
+
+This project is licensed under the MIT
