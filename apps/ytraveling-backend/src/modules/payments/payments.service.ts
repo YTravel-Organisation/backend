@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   NotAcceptableException,
 } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreatePaymentDto, UpdatePaymentDto } from './dto/payment.dto';
 
 @Injectable()

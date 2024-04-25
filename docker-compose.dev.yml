@@ -62,8 +62,8 @@ services:
     networks:
       - ytraveling-network
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_USER: "ytravel_rabbitmq_user"
+      RABBITMQ_DEFAULT_PASS: "ytravel_rabbitmq_password"
 
   prisma-db-push:
     build:
@@ -108,6 +108,19 @@ services:
     volumes:
       - ./apps:/app/apps
       - ./lib:/app/lib
+
+  search-services:
+    build:
+      context: .
+      dockerfile: apps/search/Dockerfile
+    networks:
+      - ytraveling-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    volumes:
+      - ./apps:/app/apps
 
   mailhog:
     image: mailhog/mailhog:latest
