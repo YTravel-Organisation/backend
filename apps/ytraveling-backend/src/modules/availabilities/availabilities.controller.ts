@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   Param,
   Post,
@@ -18,6 +20,7 @@ export class AvailabilityController {
   constructor(private readonly availabilityService: AvailabilityService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createAvailabilitieDto: CreateAvailabilitieDto) {
     try {
       return this.availabilityService.create(createAvailabilitieDto);
@@ -27,6 +30,7 @@ export class AvailabilityController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(
     @Query('limit') queryLimit: number,
     @Query('page') queryPage: number,
@@ -42,6 +46,7 @@ export class AvailabilityController {
   }
 
   @Get(':roomId')
+  @HttpCode(HttpStatus.OK)
   getRoomAvailabilities(
     @Param('roomId') roomId: number,
     @Query('limit') queryLimit: number,
@@ -62,6 +67,7 @@ export class AvailabilityController {
   }
 
   @Put(':roomId')
+  @HttpCode(HttpStatus.OK)
   updateUnavailableRoomToAvailable(@Param('roomId') roomId: string) {
     try {
       return this.availabilityService.updateUnavailableRoomToAvailable(+roomId);
@@ -71,6 +77,7 @@ export class AvailabilityController {
   }
 
   @Put(':roomId/:startDate/:endDate')
+  @HttpCode(HttpStatus.OK)
   setRoomToMaintenance(
     @Param('roomId') roomId: number,
     @Param('startDate') startDate: string,
