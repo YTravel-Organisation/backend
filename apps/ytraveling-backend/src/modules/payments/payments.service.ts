@@ -1,7 +1,7 @@
 import {
   Injectable,
+  NotFoundException,
   InternalServerErrorException,
-  NotAcceptableException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreatePaymentDto, UpdatePaymentDto } from './dto/payment.dto';
@@ -10,7 +10,7 @@ import { CreatePaymentDto, UpdatePaymentDto } from './dto/payment.dto';
 export class PaymentsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPaymentDto: CreatePaymentDto) {
+  async create(createPaymentDto: CreatePaymentDto): Promise<string> {
     try {
       await this.prisma.payment.create({
         data: {
@@ -20,83 +20,86 @@ export class PaymentsService {
         },
       });
 
-      return 'PaymentCreated';
+      return 'Payment successfully created.';
     } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+      console.error('Payment creation failed:', error);
+      throw new InternalServerErrorException('Failed to create payment.');
     }
   }
 
   async findAll(page: number, limit: number) {
-    try {
-      const skip = limit * (page - 1);
-      return this.prisma.payment.findMany({
-        skip: skip,
-        take: limit,
-      });
-    } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+    const skip = limit * (page - 1);
+    const payments = await this.prisma.payment.findMany({
+      skip,
+      take: limit,
+    });
+
+    if (payments.length === 0) {
+      throw new NotFoundException('No payments found.');
     }
+
+    return payments;
   }
 
   async findOne(id: number) {
     const payment = await this.prisma.payment.findUnique({ where: { id } });
     if (!payment) {
-      throw new NotAcceptableException("Payment doesn't exist");
+      throw new NotFoundException("Payment doesn't exist.");
     }
     return payment;
   }
 
-  async update(id: number, updatePayment: UpdatePaymentDto) {
+  async update(id: number, updatePayment: UpdatePaymentDto): Promise<string> {
     try {
-      const updatedPayment = await this.prisma.payment.update({
+      await this.prisma.payment.update({
         where: { id },
         data: updatePayment,
       });
 
-      if (!updatedPayment) {
-        throw new NotAcceptableException("Payment doesn't exist");
-      } else {
-        return 'PaymentUpdated';
-      }
+      return 'Payment successfully updated.';
     } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+      console.error('Payment update failed:', error);
+      throw new NotFoundException("Payment doesn't exist or update failed.");
     }
   }
 
   async findUserPayments(userId: number, page: number, limit: number) {
-    try {
-      const skip = limit * (page - 1);
-      return this.prisma.payment.findMany({
-        where: { userId },
-        skip: skip,
-        take: limit,
-      });
-    } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+    const skip = limit * (page - 1);
+    const payments = await this.prisma.payment.findMany({
+      where: { userId },
+      skip,
+      take: limit,
+    });
+
+    if (payments.length === 0) {
+      throw new NotFoundException('No payments found for this user.');
     }
+
+    return payments;
   }
 
   async findReservationPayments(reservationId: number) {
-    try {
-      return this.prisma.payment.findMany({ where: { reservationId } });
-    } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+    const payments = await this.prisma.payment.findMany({
+      where: { reservationId },
+    });
+
+    if (payments.length === 0) {
+      throw new NotFoundException('No payments found for this reservation.');
     }
+
+    return payments;
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<string> {
     try {
-      const deletedPayment = await this.prisma.payment.delete({
+      await this.prisma.payment.delete({
         where: { id },
       });
 
-      if (!deletedPayment) {
-        throw new NotAcceptableException("Payment doesn't exist");
-      } else {
-        return 'PaymentDeleted';
-      }
+      return 'Payment successfully deleted.';
     } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+      console.error('Payment deletion failed:', error);
+      throw new NotFoundException("Payment doesn't exist or already deleted.");
     }
   }
 }
