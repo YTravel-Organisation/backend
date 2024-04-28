@@ -4,11 +4,11 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  InternalServerErrorException,
   Param,
   Post,
   Put,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AvailabilityService } from './availabilities.service';
@@ -21,76 +21,52 @@ export class AvailabilityController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createAvailabilitieDto: CreateAvailabilitieDto) {
-    try {
-      return this.availabilityService.create(createAvailabilitieDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  async create(@Body() createAvailabilitieDto: CreateAvailabilitieDto) {
+    return await this.availabilityService.create(createAvailabilitieDto);
   }
 
   @Get()
-  @HttpCode(HttpStatus.OK)
-  findAll(
-    @Query('limit') queryLimit: number,
-    @Query('page') queryPage: number,
+  async findAll(
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', ParseIntPipe) page: number = 1,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.availabilityService.findAll(limit, page);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.availabilityService.findAll(limit, page);
   }
 
   @Get(':roomId')
-  @HttpCode(HttpStatus.OK)
-  getRoomAvailabilities(
-    @Param('roomId') roomId: number,
-    @Query('limit') queryLimit: number,
-    @Query('page') queryPage: number,
+  async getRoomAvailabilities(
+    @Param('roomId', ParseIntPipe) roomId: number,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', ParseIntPipe) page: number = 1,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.availabilityService.getRoomAvailabilities(
-        roomId,
-        limit,
-        page,
-      );
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.availabilityService.getRoomAvailabilities(
+      roomId,
+      limit,
+      page,
+    );
   }
 
   @Put(':roomId')
   @HttpCode(HttpStatus.OK)
-  updateUnavailableRoomToAvailable(@Param('roomId') roomId: string) {
-    try {
-      return this.availabilityService.updateUnavailableRoomToAvailable(+roomId);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  async updateUnavailableRoomToAvailable(
+    @Param('roomId', ParseIntPipe) roomId: number,
+  ) {
+    return await this.availabilityService.updateUnavailableRoomToAvailable(
+      roomId,
+    );
   }
 
   @Put(':roomId/:startDate/:endDate')
   @HttpCode(HttpStatus.OK)
-  setRoomToMaintenance(
-    @Param('roomId') roomId: number,
+  async setRoomToMaintenance(
+    @Param('roomId', ParseIntPipe) roomId: number,
     @Param('startDate') startDate: string,
     @Param('endDate') endDate: string,
   ) {
-    try {
-      return this.availabilityService.setRoomToMaintenance(
-        roomId,
-        startDate,
-        endDate,
-      );
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.availabilityService.setRoomToMaintenance(
+      roomId,
+      startDate,
+      endDate,
+    );
   }
 }
