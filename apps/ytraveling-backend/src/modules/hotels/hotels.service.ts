@@ -1,14 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreateHotelDto } from './dto/hotel.dto';
 
 @Injectable()
 export class HotelsService {
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   async createHotel(createHotelDto: CreateHotelDto) {
-    const {userId, ...rest} = createHotelDto;
+    const { userId, ...rest } = createHotelDto;
 
     const user = await this.prisma.user.findUnique({
       where: {
@@ -27,7 +26,7 @@ export class HotelsService {
       data: {
         ...rest,
         user: {
-          connect: {id: userId},
+          connect: { id: userId },
         },
         rating: 0,
         bannerImage: '',

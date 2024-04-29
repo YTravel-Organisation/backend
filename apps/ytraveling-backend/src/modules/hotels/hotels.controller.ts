@@ -4,10 +4,11 @@ import {
   Delete,
   Get,
   InternalServerErrorException,
-  Param, Patch,
+  Param,
+  Patch,
   Post,
 } from '@nestjs/common';
-import {CreateHotelDto, UpdateHotelDto} from './dto/hotel.dto';
+import { CreateHotelDto, UpdateHotelDto } from './dto/hotel.dto';
 import { HotelsService } from './hotels.service';
 import { ApiTags } from '@nestjs/swagger';
 
