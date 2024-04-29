@@ -6,8 +6,13 @@ import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
 import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
 // import { HotelsModule } from './hotels/hotels.module';
+<<<<<<< HEAD
 // import { NotificationsModule } from './notifications/notifications.module';
 import { ReservationModule } from './modules/reservations/reservations.module';
+=======
+import { NotificationsModule } from './modules/notifications/notifications.module';
+// import { ReservationsModule } from './reservations/reservations.module';
+>>>>>>> YT-209-BACK-Profil-notification
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomModule } from './modules/rooms/rooms.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
@@ -16,6 +21,7 @@ import { UserModule } from './modules/users/users.module';
 import { EmailModule } from './modules/email/email.module';
 import { PrometheusMiddleware } from './middleware/prometheus.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { SocketModule } from './modules/socket/socket.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -41,8 +47,8 @@ import { JwtModule } from '@nestjs/jwt';
     CommentsModule,
     EventsModule,
     // HotelsModule,
-    // NotificationsModule,
-    ReservationModule,
+    NotificationsModule,
+    // ReservationsModule,
     PaymentsModule,
     RoomModule,
     RolesModule,
@@ -51,6 +57,7 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     JwtModule,
     ProfilesModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [],
