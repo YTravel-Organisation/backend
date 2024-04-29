@@ -52,7 +52,7 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     JwtModule,
     ProfilesModule,
-    SocketModule
+    SocketModule,
   ],
   controllers: [],
   providers: [],

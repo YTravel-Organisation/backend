@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../tools/database.config';
 import { CreateNotificationDto, UpdateNotificationDto } from './dto/notification.dto';
 import { SocketGateway } from '../socket/socket.gateway';
@@ -16,7 +16,7 @@ export class NotificationService {
       return notification;
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new Error('Failed to create notification');
     }
   }
 
@@ -26,51 +26,43 @@ export class NotificationService {
         where: { id: notificationId },
         data: updateNotificationDto,
       });
+      if (!notification) throw new NotFoundException('Notification not found');
       this.socketGateway.emitNotification(notification);
       return notification;
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new Error('Failed to update notification');
     }
   }
 
-  async findAll() {
-    try {
-      const notifications = await this.prisma.notification.findMany();
-      if (!notifications || notifications.length === 0) {
-        return { status: 204, message: 'No notifications found' };
-      }
-      return { status: 200, message: 'Notifications Found', data: notifications };
-    } catch (error) {
-      console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
+  async findAll(page: number, limit: number) {
+    if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
+      throw new BadRequestException('Invalid page or limit value');
     }
+    const skip = (page - 1) * limit;
+    const notifications = await this.prisma.notification.findMany({
+      skip,
+      take: limit,
+    });
+    if (!notifications || notifications.length === 0) {
+      return { status: 204, message: 'No notifications found' };
+    }
+    return { status: 200, message: 'Notifications found', data: notifications };
   }
 
   async findOne(id: number) {
-    try {
-      const notification = await this.prisma.notification.findUnique({ where: { id } });
-      if (!notification) {
-        return { status: 404, message: "Notification doesn't exist" };
-      }
-      return { status: 200, message: 'Notification Found', data: notification };
-    } catch (error) {
-      console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
+    const notification = await this.prisma.notification.findUnique({ where: { id } });
+    if (!notification) {
+      throw new NotFoundException("Notification not found");
     }
+    return { status: 200, message: 'Notification found', data: notification };
   }
 
   async remove(id: number) {
-    try {
-      const deletedNotification = await this.prisma.notification.delete({ where: { id } });
-      if (!deletedNotification) {
-        return { status: 204, message: 'No notification found' };
-      } else {
-        return { status: 200, message: 'Notification Deleted', data: deletedNotification };
-      }
-    } catch (error) {
-      console.error(error);
-      return { status: 500, message: 'Internal Server Error' };
+    const deletedNotification = await this.prisma.notification.delete({ where: { id } });
+    if (!deletedNotification) {
+      throw new NotFoundException('Notification not found');
     }
+    return { status: 200, message: 'Notification deleted', data: deletedNotification };
   }
 }

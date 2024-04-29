@@ -9,7 +9,7 @@ export class CreateNotificationDto {
     @AutoMap()
     @IsDate()
     @IsOptional()
-    Datetime?: Date;
+    createdAt?: Date;
 
     @ApiProperty()
     @AutoMap()
