@@ -18,10 +18,6 @@ export class HotelsService {
     if (!user) {
       throw new Error('User not found');
     }
-    if (user.email !== rest.email) {
-      throw new Error('Email does not match');
-    }
-
     const hotel = await this.prisma.hotel.create({
       data: {
         ...rest,
