@@ -4,11 +4,19 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import { register } from 'prom-client';
+import { CustomLogger } from 'lib/service/CustomLogger';
 
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new CustomLogger(),
+  });
+
+  const customLogger = new CustomLogger('AppContext', {
+    logDir: 'logs',
+  });
+  app.useLogger(customLogger);
 
   const document = new DocumentBuilder()
     .setTitle('YTraveling Backend API')
