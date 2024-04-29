@@ -62,8 +62,20 @@ services:
     networks:
       - ytraveling-network
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_USER: "ytravel_rabbitmq_user"
+      RABBITMQ_DEFAULT_PASS: "ytravel_rabbitmq_password"
+
+  prisma-db-push:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: dbgenerator
+    networks:
+      - ytraveling-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
 
   ytraveling:
     build:
@@ -80,12 +92,27 @@ services:
       - rabbitmq
     volumes:
       - ./apps:/app/apps
+      - ./lib:/app/lib
 
   smtp-services:
     build:
       context: .
       dockerfile: Dockerfile.dev
       target: smtp
+    networks:
+      - ytraveling-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    volumes:
+      - ./apps:/app/apps
+      - ./lib:/app/lib
+
+  search-services:
+    build:
+      context: .
+      dockerfile: apps/search/Dockerfile
     networks:
       - ytraveling-network
     depends_on:

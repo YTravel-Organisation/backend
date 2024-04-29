@@ -3,12 +3,20 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsDate,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
-import { Gender } from '@prisma/client';
+import { Type } from 'class-transformer';
+
+export enum Gender {
+  MAN = 'MAN',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
+
 export class CreateProfileDto {
   @ApiProperty()
   @AutoMap()
@@ -17,6 +25,7 @@ export class CreateProfileDto {
 
   @ApiProperty()
   @AutoMap()
+  @IsEnum(Gender)
   gender: Gender;
 
   @ApiProperty()
@@ -70,6 +79,7 @@ export class CreateProfileDto {
   @ApiProperty()
   @AutoMap()
   @IsDate()
+  @Type(() => Date)
   dateOfBirth: Date;
 
   @ApiProperty()
@@ -82,12 +92,14 @@ export class CreateProfileDto {
 export class UpdateProfileDto {
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsNumber()
-  userId: number;
+  userId?: number;
 
   @ApiProperty()
   @AutoMap()
   @IsOptional()
+  @IsEnum(Gender)
   gender?: Gender;
 
   @ApiProperty()
@@ -135,8 +147,9 @@ export class UpdateProfileDto {
 
   @ApiProperty()
   @AutoMap()
+  @IsOptional()
   @IsNumber()
-  postalCode: number;
+  postalCode?: number;
 
   @ApiProperty()
   @AutoMap()
@@ -147,6 +160,7 @@ export class UpdateProfileDto {
   @ApiProperty()
   @AutoMap()
   @IsDate()
+  @Type(() => Date)
   @IsOptional()
   dateOfBirth?: Date;
 

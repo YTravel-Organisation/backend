@@ -1,7 +1,7 @@
 
 
 # Loop over subdirectories in ./apps
-for service_path in ./apps/*; do
+for service_path in ../apps/*; do
     # Check if the item is a directory
     if [ -d "$service_path" ]; then
         # Extract only the name of the service (folder)

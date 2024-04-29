@@ -1,38 +1,27 @@
-FROM node:18 AS build
+FROM node:18 AS builder
+
+ENV NODE_OPTIONS="--max-old-space-size=500"
+
 WORKDIR /app
-COPY package.json /app
+COPY package*.json ./
 RUN npm install
 
-FROM build AS base
 COPY . .
-RUN npx prisma generate
-RUN chmod +x build-all.sh
-RUN ./build-all.sh
+# RUN npx prisma generate
+RUN npx prisma db push
+RUN npm run build
 
-FROM base AS dbgenerator
-CMD ["npx", "prisma", "db", "push"]
+# Installez les dépendances supplémentaires requises
+RUN apt-get update && apt-get install -y libssl-dev procps
 
+# Nettoyage des installations
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-FROM node:18-slim AS smtp
-RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
-WORKDIR /usr/src/app
-COPY --chown=node:node --from=base /app/dist/apps/smtp ./dist/apps/smtp
-COPY --chown=node:node --from=base /app/.env .env
-COPY --chown=node:node --from=base /app/node_modules  ./node_modules
+# Exposez un port (si nécessaire, pour le service principal ou un proxy)
+EXPOSE $PORT
 
-ENV NODE_ENV production
-CMD ["dumb-init", "node", "dist/apps/smtp/main"]
+# Copiez un script de démarrage personnalisé qui lancera vos services
+COPY entrypoint.sh /app
+RUN chmod +x /app/entrypoint.sh
 
-
-FROM node:18-slim AS ytraveling
-RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
-WORKDIR /usr/src/app
-COPY --chown=node:node --from=base /app/dist/apps/ytraveling-backend ./dist/apps/ytraveling-backend
-COPY --chown=node:node --from=base /app/.env .env
-COPY --chown=node:node --from=base /app/node_modules/.prisma/client  ./node_modules/.prisma/client
-COPY --chown=node:node --from=base /app/node_modules/@prisma/client  ./node_modules/@prisma/client
-COPY --chown=node:node --from=base /app/node_modules  ./node_modules
-
-ENV NODE_ENV production
-CMD ["dumb-init", "node", "dist/apps/ytraveling-backend/main"]
-
+CMD ["/app/entrypoint.sh"]

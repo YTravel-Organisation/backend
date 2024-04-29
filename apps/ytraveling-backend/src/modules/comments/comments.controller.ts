@@ -6,8 +6,10 @@ import {
   Param,
   Delete,
   Put,
-  InternalServerErrorException,
+  HttpCode,
+  HttpStatus,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CommentService } from './comments.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
@@ -19,101 +21,63 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    try {
-      return this.commentService.create(createCommentDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createCommentDto: CreateCommentDto) {
+    return await this.commentService.create(createCommentDto);
   }
 
   @Get()
-  findAll(
-    @Query('limit') queryLimit: number,
-    @Query('page') queryPage: number,
+  async findAll(
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', ParseIntPipe) page: number = 1,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.commentService.findAll(limit, page);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.commentService.findAll(limit, page);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.commentService.findOne(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.commentService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    try {
-      return this.commentService.update(+id, updateCommentDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return await this.commentService.update(id, updateCommentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    try {
-      return this.commentService.remove(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.commentService.remove(id);
   }
 
   @Get('hotel/:id')
-  findByHotelId(
-    @Param('id') id: string,
-    @Query('limit') queryLimit: number,
-    @Query('page') queryPage: number,
+  async findByHotelId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', ParseIntPipe) page: number = 1,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.commentService.getCommentsByHotelId(+id, limit, page);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.commentService.getCommentsByHotelId(id, limit, page);
   }
 
   @Get('user/:id')
-  findByUserId(
-    @Param('id') id: string,
-    @Query('limit') queryLimit: number,
-    @Query('page') queryPage: number,
+  async findByUserId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', ParseIntPipe) page: number = 1,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.commentService.getCommentsByUserId(+id, limit, page);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.commentService.getCommentsByUserId(id, limit, page);
   }
 
   @Get('event/:id')
-  findByEventId(
-    @Param('id') id: string,
-    @Query('limit') queryLimit: number,
-    @Query('page') queryPage: number,
+  async findByEventId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', ParseIntPipe) page: number = 1,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.commentService.getCommentsByEventId(+id, limit, page);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.commentService.getCommentsByEventId(id, limit, page);
   }
 }
