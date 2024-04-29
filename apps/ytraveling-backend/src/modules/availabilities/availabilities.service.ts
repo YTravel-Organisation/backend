@@ -14,20 +14,18 @@ export class AvailabilityService {
   ): Promise<string> {
     const { roomId, reservationId, ...rest } = createAvailabilitieDto;
 
-    const searchRoom = await this.prisma.room.findUnique({
-      where: { id: roomId },
-    });
-
-    if (!searchRoom) {
-      throw new NotFoundException('RoomNotFound');
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
+    if (!room) {
+      throw new NotFoundException(`Room with ID ${roomId} not found.`);
     }
 
-    const searchReservation = await this.prisma.reservation.findUnique({
+    const reservation = await this.prisma.reservation.findUnique({
       where: { id: reservationId },
     });
-
-    if (!searchReservation) {
-      throw new NotFoundException('ReservationNotFound');
+    if (!reservation) {
+      throw new NotFoundException(
+        `Reservation with ID ${reservationId} not found.`,
+      );
     }
 
     await this.prisma.availability.create({
@@ -39,34 +37,48 @@ export class AvailabilityService {
       },
     });
 
-    return 'AvailabilitieCreated';
+    return 'Availability created successfully.';
   }
 
-  async updateUnavailableRoomToAvailable(roomId: number) {
-    await this.prisma.availability.deleteMany({
-      where: {
-        roomId,
-      },
+  async updateUnavailableRoomToAvailable(roomId: number): Promise<string> {
+    const deleteCount = await this.prisma.availability.deleteMany({
+      where: { roomId },
     });
+    if (deleteCount.count === 0) {
+      throw new NotFoundException(
+        `No unavailable rooms with ID ${roomId} found to update.`,
+      );
+    }
+    return `Updated ${deleteCount.count} rooms to available.`;
   }
 
   async getRoomAvailabilities(roomId: number, limit: number, page: number) {
     const skip = limit * (page - 1);
-    return this.prisma.availability.findMany({
-      where: {
-        roomId,
-      },
+    const availabilities = await this.prisma.availability.findMany({
+      where: { roomId },
       skip: skip,
       take: limit,
     });
+
+    if (!availabilities.length) {
+      throw new NotFoundException(
+        `No availabilities found for room ID ${roomId}.`,
+      );
+    }
+    return availabilities;
   }
 
   async findAll(limit: number, page: number) {
     const skip = limit * (page - 1);
-    return this.prisma.availability.findMany({
+    const availabilities = await this.prisma.availability.findMany({
       skip: skip,
       take: limit,
     });
+
+    if (!availabilities.length) {
+      throw new NotFoundException('No availabilities found.');
+    }
+    return availabilities;
   }
 
   async checkRoomAvailability(
@@ -78,38 +90,26 @@ export class AvailabilityService {
       where: {
         roomId,
         NOT: [
-          {
-            endDate: {
-              lt: new Date(startDate),
-            },
-          },
-          {
-            startDate: {
-              gt: new Date(endDate),
-            },
-          },
+          { endDate: { lt: new Date(startDate) } },
+          { startDate: { gt: new Date(endDate) } },
         ],
       },
     });
 
-    if (!overlappingBooking) {
-      throw new NotFoundException('AvailabilitieNotFound');
+    if (overlappingBooking) {
+      return 'Room is unavailable.';
     }
-
-    return 'RoomAvailable';
+    return 'Room is available.';
   }
 
   async setRoomToMaintenance(
     roomId: number,
     startDate: string,
     endDate: string,
-  ) {
-    const searchRoom = await this.prisma.room.findUnique({
-      where: { id: roomId },
-    });
-
-    if (!searchRoom) {
-      throw new NotFoundException('RoomNotFound');
+  ): Promise<string> {
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
+    if (!room) {
+      throw new NotFoundException(`Room with ID ${roomId} not found.`);
     }
 
     await this.prisma.availability.create({
@@ -122,6 +122,6 @@ export class AvailabilityService {
       },
     });
 
-    return 'RoomInMaintenance';
+    return 'Room set to maintenance successfully.';
   }
 }

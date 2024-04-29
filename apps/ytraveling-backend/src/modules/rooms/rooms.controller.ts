@@ -6,11 +6,13 @@ import {
   Param,
   Put,
   Delete,
-  InternalServerErrorException,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { RoomService } from './rooms.service';
 import { CreateRoomDto, UpdateRoomDto } from './dto/room.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Rooms')
 @Controller('rooms')
@@ -18,47 +20,33 @@ export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  create(@Body() createRoomDto: CreateRoomDto) {
-    try {
-      return this.roomService.create(createRoomDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createRoomDto: CreateRoomDto) {
+    return await this.roomService.create(createRoomDto);
   }
 
   @Get()
-  findAll() {
-    try {
-      return this.roomService.findAll();
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  async findAll() {
+    return await this.roomService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.roomService.findOne(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.roomService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
-    try {
-      return this.roomService.update(+id, updateRoomDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateRoomDto: UpdateRoomDto,
+  ) {
+    return await this.roomService.update(id, updateRoomDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    try {
-      return this.roomService.remove(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.roomService.remove(id);
   }
 }

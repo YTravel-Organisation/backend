@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
-  InternalServerErrorException,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ProfileService } from './profiles.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto/profile.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Profiles')
 @Controller('profiles')
@@ -19,100 +21,69 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    try {
-      this.profileService.create(createProfileDto);
-
-      return 'ProfileCreated';
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createProfileDto: CreateProfileDto) {
+    return await this.profileService.create(createProfileDto);
   }
 
   @Get()
-  findAll(
-    @Query('page') queryPage: number,
-    @Query('limit') queryLimit: number,
+  async findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
   ) {
-    const limit = parseInt(queryLimit.toString(), 10) || 10;
-    const page = parseInt(queryPage.toString(), 10) || 1;
-
-    try {
-      return this.profileService.findAll(limit, page);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.profileService.findAll(limit, page);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.profileService.findOne(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.profileService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    try {
-      return this.profileService.update(+id, updateProfileDto);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    return await this.profileService.update(id, updateProfileDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    try {
-      return this.profileService.remove(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.profileService.remove(id);
   }
 
   @Patch(':id/profile-image')
-  addProfileImage(
-    @Param('id') id: string,
+  @HttpCode(HttpStatus.OK)
+  async addProfileImage(
+    @Param('id', ParseIntPipe) id: number,
     @Body('profileImage') profileImage: string,
   ) {
-    try {
-      return this.profileService.addProfileImage(+id, profileImage);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.profileService.addProfileImage(id, profileImage);
   }
 
   @Patch(':id/last-search')
-  addLastSearch(
-    @Param('id') id: string,
+  @HttpCode(HttpStatus.OK)
+  async addLastSearch(
+    @Param('id', ParseIntPipe) id: number,
     @Body('lastSearch') lastSearch: string,
   ) {
-    try {
-      return this.profileService.addLastSearch(+id, lastSearch);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return await this.profileService.addLastSearch(id, lastSearch);
   }
 
   @Delete(':id/last-search')
-  removeLastSearch(
-    @Param('id') id: string,
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeLastSearch(
+    @Param('id', ParseIntPipe) id: number,
     @Body('lastSearch') lastSearch: string,
   ) {
-    try {
-      return this.profileService.removeLastSearch(+id, lastSearch);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    await this.profileService.removeLastSearch(id, lastSearch);
   }
 
   @Delete(':id/all-last-search')
-  removeAllLastSearch(@Param('id') id: string) {
-    try {
-      return this.profileService.removeAllLastSearch(+id);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeAllLastSearch(@Param('id', ParseIntPipe) id: number) {
+    await this.profileService.removeAllLastSearch(id);
   }
 }

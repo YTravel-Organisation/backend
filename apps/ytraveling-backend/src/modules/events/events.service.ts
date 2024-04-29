@@ -1,8 +1,8 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
@@ -12,10 +12,10 @@ export class EventService {
   constructor(private readonly prisma: PrismaService) {}
 
   private async validateHotelExistence(hotelId: number): Promise<void> {
-    const exists = await this.prisma.hotel.findUnique({
+    const hotelExists = await this.prisma.hotel.findUnique({
       where: { id: hotelId },
     });
-    if (!exists) {
+    if (!hotelExists) {
       throw new NotFoundException(`Hotel with ID ${hotelId} not found.`);
     }
   }
@@ -28,17 +28,17 @@ export class EventService {
 
   async create(createEventDto: CreateEventDto) {
     this.validateDates(createEventDto.startDate, createEventDto.endDate);
+    await this.validateHotelExistence(createEventDto.hotelId);
 
     const { hotelId, ...rest } = createEventDto;
-    const data: any = { ...rest };
-
-    if (hotelId) {
-      await this.validateHotelExistence(hotelId);
-      data.hotel = { connect: { id: hotelId } };
-    }
-
     try {
-      return await this.prisma.event.create({ data });
+      const event = await this.prisma.event.create({
+        data: {
+          ...rest,
+          hotel: { connect: { id: hotelId } },
+        },
+      });
+      return event;
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException('Failed to create event.');
@@ -47,20 +47,18 @@ export class EventService {
 
   async update(eventId: number, updateEventDto: UpdateEventDto) {
     this.validateDates(updateEventDto.startDate, updateEventDto.endDate);
+    await this.validateHotelExistence(updateEventDto.hotelId);
 
     const { hotelId, ...rest } = updateEventDto;
-    const data: any = { ...rest };
-
-    if (hotelId) {
-      await this.validateHotelExistence(hotelId);
-      data.hotel = { connect: { id: hotelId } };
-    }
-
     try {
-      return await this.prisma.event.update({
+      const event = await this.prisma.event.update({
         where: { id: eventId },
-        data,
+        data: {
+          ...rest,
+          hotel: { connect: { id: hotelId } },
+        },
       });
+      return event;
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException('Failed to update event.');
@@ -69,9 +67,10 @@ export class EventService {
 
   async findAll() {
     const events = await this.prisma.event.findMany();
-    return events.length > 0
-      ? { status: 200, message: 'Events Found', data: events }
-      : { status: 204, message: 'No event found' };
+    if (events.length === 0) {
+      throw new NotFoundException('No events found.');
+    }
+    return events;
   }
 
   async findOne(id: number) {
@@ -79,13 +78,13 @@ export class EventService {
     if (!event) {
       throw new NotFoundException("Event doesn't exist.");
     }
-    return { status: 200, message: 'Event Found', data: event };
+    return event;
   }
 
   async remove(id: number) {
     try {
-      const deletedEvent = await this.prisma.event.delete({ where: { id } });
-      return { status: 200, message: 'Event Deleted', data: deletedEvent };
+      await this.prisma.event.delete({ where: { id } });
+      return 'Event successfully deleted.';
     } catch (error) {
       console.error(error);
       throw new NotFoundException('Event to delete does not exist.');
