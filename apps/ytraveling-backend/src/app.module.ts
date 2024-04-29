@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '../../../lib/prisma-shared/prisma.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
-// import { HotelsModule } from './hotels/hotels.module';
 // import { NotificationsModule } from './notifications/notifications.module';
 // import { ReservationsModule } from './reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
@@ -16,6 +15,7 @@ import { EmailModule } from './modules/email/email.module';
 import { PrometheusMiddleware } from './middleware/prometheus.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { HotelsModule } from './modules/hotels/hotels.module';
 import { RedisSharedModule } from 'lib/redis-shared/redis.module';
 
 @Module({
@@ -28,7 +28,7 @@ import { RedisSharedModule } from 'lib/redis-shared/redis.module';
     RedisSharedModule,
     CommentsModule,
     EventsModule,
-    // HotelsModule,
+    HotelsModule,
     // NotificationsModule,
     // ReservationsModule,
     PaymentsModule,

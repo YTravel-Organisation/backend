@@ -249,11 +249,11 @@ model Hotel {
   longitude        Decimal
   latitude         Decimal
   faq              String[]
-  paymentMethod    MethodPayment
+  paymentMethod    MethodPayment[]
   otherInformation String[]
   rooms            Room[]
   events           Event[]
-  user             User?         @relation(fields: [userId], references: [id])
+  user             User      @relation(fields: [userId], references: [id])
   comments         Comment[]
 
   @@map("hotels")
