@@ -13,7 +13,7 @@ async function bootstrap() {
   const document = new DocumentBuilder()
     .setTitle('YTraveling Backend API')
     .setDescription('YTraveling Backend API')
-    .setVersion('0.35.0')
+    .setVersion('0.40.0')
     .addServer('http://ytraveling.com', 'Production server')
     .addServer('http://staging.ytraveling.com', 'Staging server')
     .addServer('http://localhost:3000', 'Development server')
