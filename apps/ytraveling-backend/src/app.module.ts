@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from '../../../lib/prisma-shared/prisma.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
-// import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 // import { ReservationsModule } from './reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomModule } from './modules/rooms/rooms.module';
@@ -32,7 +32,7 @@ import { LoyaltyProgramsModule } from './modules/loyalty_programs/loyalty_progra
     CommentsModule,
     EventsModule,
     HotelsModule,
-    // NotificationsModule,
+    NotificationsModule,
     // ReservationsModule,
     PaymentsModule,
     RoomModule,
@@ -44,6 +44,7 @@ import { LoyaltyProgramsModule } from './modules/loyalty_programs/loyalty_progra
     ProfilesModule,
     PropertyAmenitiesModule,
     LoyaltyProgramsModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [HttpModule],

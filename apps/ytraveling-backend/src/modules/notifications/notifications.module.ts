@@ -1,6 +1,6 @@
 // src/roles/notification.module.ts
 import { Module } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { NotificationController } from './notifications.controller';
 import { NotificationService } from './notifications.service';
 import { SocketModule } from '../socket/socket.module';
