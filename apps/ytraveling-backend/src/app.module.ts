@@ -17,6 +17,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { HotelsModule } from './modules/hotels/hotels.module';
 import { RedisSharedModule } from 'lib/redis-shared/redis.module';
+import { PropertyAmenitiesModule } from './modules/property_amenities/property_amenities.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { RedisSharedModule } from 'lib/redis-shared/redis.module';
     AuthModule,
     JwtModule,
     ProfilesModule,
+    PropertyAmenitiesModule,
   ],
   controllers: [],
   providers: [HttpModule],
