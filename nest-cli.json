@@ -1,8 +1,41 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/ytraveling-backend/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/ytraveling-backend/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/ytraveling-backend",
+  "projects": {
+    "ytraveling-backend": {
+      "type": "application",
+      "root": "apps/ytraveling-backend",
+      "entryFile": "main",
+      "sourceRoot": "apps/ytraveling-backend/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ytraveling-backend/tsconfig.app.json"
+      }
+    },
+    "smtp": {
+      "type": "application",
+      "root": "apps/smtp",
+      "entryFile": "main",
+      "sourceRoot": "apps/smtp/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/smtp/tsconfig.app.json"
+      }
+    },
+    "search": {
+      "type": "application",
+      "root": "apps/search",
+      "entryFile": "main",
+      "sourceRoot": "apps/search/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/search/tsconfig.app.json"
+      }
+    }
   }
 }
