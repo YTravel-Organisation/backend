@@ -5,12 +5,16 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
+import { NotificationService } from '../notifications/notifications.service';
 import { CreateProfileDto, UpdateProfileDto } from './dto/profile.dto';
 import { isPast } from 'date-fns';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private notificationService: NotificationService,
+  ) {}
 
   private async ensureUserExists(userId: number): Promise<void> {
     const userExists = await this.prisma.user.findUnique({
@@ -57,10 +61,20 @@ export class ProfileService {
     }
 
     try {
-      await this.prisma.profile.update({
+      const response = await this.prisma.profile.update({
         where: { id: profileId },
         data: updateProfileDto,
       });
+
+      if (response) {
+        this.notificationService.create({
+          userId: updateProfileDto.userId,
+          type: 'SUCCESS',
+          title: 'Profile mis à jour',
+          message: 'Votre profil a été mis à jour avec succès.',
+        });
+      }
+
       return 'Profile updated successfully.';
     } catch (error) {
       console.error('Failed to update profile:', error);
