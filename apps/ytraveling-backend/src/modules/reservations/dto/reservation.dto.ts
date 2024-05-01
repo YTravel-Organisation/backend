@@ -1,13 +1,26 @@
-import { IsInt, IsOptional, IsString, IsDate } from 'class-validator';
-import { BookingType, ReservationStatus } from '@prisma/client';
+import { IsInt, IsOptional, IsString, IsDate, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AutoMap } from 'nestjsx-automapper';
+import { Type } from 'class-transformer';
+
+export enum BookingType {
+  ROOM = 'ROOM',
+  EVENT = 'EVENT',
+  TRANSPORT = 'TRANSPORT',
+}
+
+export enum ReservationStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+  NO_SHOW = 'NO_SHOW',
+}
 
 export class CreateReservationDto {
-
   @ApiProperty()
   @AutoMap()
-  @IsInt()
+  @IsEnum(BookingType)
   bookingType: BookingType;
 
   @ApiProperty()
@@ -42,16 +55,18 @@ export class CreateReservationDto {
   @ApiProperty()
   @AutoMap()
   @IsDate()
+  @Type(() => Date)
   startDate: Date;
 
   @ApiProperty()
   @AutoMap()
   @IsDate()
+  @Type(() => Date)
   endDate: Date;
 
   @ApiProperty()
   @AutoMap()
-  @IsInt()
+  @IsEnum(ReservationStatus)
   reservationStatus: ReservationStatus;
 
   @ApiProperty()
@@ -73,11 +88,10 @@ export class CreateReservationDto {
 }
 
 export class UpdateReservationDto {
-
   @ApiProperty()
   @AutoMap()
   @IsOptional()
-  @IsInt()
+  @IsEnum(BookingType)
   bookingType?: BookingType;
 
   @ApiProperty()
@@ -114,18 +128,20 @@ export class UpdateReservationDto {
   @AutoMap()
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   startDate?: Date;
 
   @ApiProperty()
   @AutoMap()
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   endDate?: Date;
 
   @ApiProperty()
   @AutoMap()
   @IsOptional()
-  @IsInt()
+  @IsEnum(ReservationStatus)
   reservationStatus?: ReservationStatus;
 
   @ApiProperty()

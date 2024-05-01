@@ -1,6 +1,19 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import { ReservationService } from './reservations.service';
-import { CreateReservationDto, UpdateReservationDto } from './dto/reservation.dto';
+import {
+  CreateReservationDto,
+  UpdateReservationDto,
+} from './dto/reservation.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Reservations')
@@ -9,52 +22,40 @@ export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   async getAllReservations() {
-    try {
-      const result = await this.reservationService.getReservations();
-      return { status: result.status, message: result.message, data: result.data };
-    } catch (error) {
-      return { status: HttpStatus.INTERNAL_SERVER_ERROR, message: error.message };
-    }
+    return await this.reservationService.getAllReservations();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async getReservationById(@Param('id') id: number) {
-    try {
-      const result = await this.reservationService.getReservationById(id);
-      return { status: result.status, message: result.message, data: result.data };
-    } catch (error) {
-      return { status: HttpStatus.INTERNAL_SERVER_ERROR, message: error.message };
-    }
+    return await this.reservationService.getReservationById(id);
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async createReservation(@Body() createReservationDto: CreateReservationDto) {
-    try {
-      const reservation = await this.reservationService.createReservation(createReservationDto);
-      return { status: HttpStatus.CREATED, message: 'Reservation created successfully', data: reservation };
-    } catch (error) {
-      return { status: HttpStatus.INTERNAL_SERVER_ERROR, message: error.message };
-    }
+    return await this.reservationService.createReservation(
+      createReservationDto,
+    );
   }
 
   @Put(':id')
-  async updateReservation(@Param('id') id: number, @Body() updateReservationDto: UpdateReservationDto) {
-    try {
-      const reservation = await this.reservationService.updateReservation(id, updateReservationDto);
-      return { status: HttpStatus.OK, message: 'Reservation updated successfully', data: reservation };
-    } catch (error) {
-      return { status: HttpStatus.INTERNAL_SERVER_ERROR, message: error.message };
-    }
+  @HttpCode(HttpStatus.OK)
+  async updateReservation(
+    @Param('id') id: number,
+    @Body() updateReservationDto: UpdateReservationDto,
+  ) {
+    return await this.reservationService.updateReservation(
+      id,
+      updateReservationDto,
+    );
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteReservation(@Param('id') id: number) {
-    try {
-      const result = await this.reservationService.deleteReservation(id);
-      return { status: result.status, message: result.message, data: result.data };
-    } catch (error) {
-      return { status: HttpStatus.INTERNAL_SERVER_ERROR, message: error.message };
-    }
+    return await this.reservationService.deleteReservation(id);
   }
 }
