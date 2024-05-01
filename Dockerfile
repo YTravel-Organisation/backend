@@ -1,38 +1,27 @@
-FROM node:18 AS build
+FROM node:18 AS builder
+
+ENV NODE_OPTIONS="--max-old-space-size=500"
+
 WORKDIR /app
-COPY package.json /app
+COPY package*.json ./
 RUN npm install
 
-FROM build AS base
 COPY . .
-RUN npx prisma generate
-RUN chmod +x build-all.sh
-RUN ./build-all.sh
 
-FROM base AS dbgenerator
-CMD ["npx", "prisma", "db", "push"]
+RUN npx prisma db push
+RUN npm run build
 
 
-FROM node:18-slim AS smtp
-RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
-WORKDIR /usr/src/app
-COPY --chown=node:node --from=base /app/dist/apps/smtp ./dist/apps/smtp
-COPY --chown=node:node --from=base /app/.env .env
-COPY --chown=node:node --from=base /app/node_modules  ./node_modules
-
-ENV NODE_ENV production
-CMD ["dumb-init", "node", "dist/apps/smtp/main"]
+RUN apt-get update && apt-get install -y libssl-dev procps
 
 
-FROM node:18-slim AS ytraveling
-RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
-WORKDIR /usr/src/app
-COPY --chown=node:node --from=base /app/dist/apps/ytraveling-backend ./dist/apps/ytraveling-backend
-COPY --chown=node:node --from=base /app/.env .env
-COPY --chown=node:node --from=base /app/node_modules/.prisma/client  ./node_modules/.prisma/client
-COPY --chown=node:node --from=base /app/node_modules/@prisma/client  ./node_modules/@prisma/client
-COPY --chown=node:node --from=base /app/node_modules  ./node_modules
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV NODE_ENV production
-CMD ["dumb-init", "node", "dist/apps/ytraveling-backend/main"]
 
+EXPOSE $PORT
+
+
+COPY entrypoint.sh /app
+RUN chmod +x /app/entrypoint.sh
+
+CMD ["/app/entrypoint.sh"]

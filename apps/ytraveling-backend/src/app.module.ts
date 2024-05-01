@@ -1,18 +1,11 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PrismaModule } from './tools/prisma.module';
-import RedisConfig from './tools/redis.config';
-import { CacheModule, CacheModuleOptions } from '@nestjs/common/cache';
+import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from '../../../lib/prisma-shared/prisma.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
-// import { HotelsModule } from './hotels/hotels.module';
-<<<<<<< HEAD
-// import { NotificationsModule } from './notifications/notifications.module';
-import { ReservationModule } from './modules/reservations/reservations.module';
-=======
 import { NotificationsModule } from './modules/notifications/notifications.module';
-// import { ReservationsModule } from './reservations/reservations.module';
->>>>>>> YT-209-BACK-Profil-notification
+import { ReservationModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomModule } from './modules/rooms/rooms.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
@@ -23,32 +16,24 @@ import { PrometheusMiddleware } from './middleware/prometheus.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { SocketModule } from './modules/socket/socket.module';
 import { JwtModule } from '@nestjs/jwt';
+import { HotelsModule } from './modules/hotels/hotels.module';
+import { RedisSharedModule } from 'lib/redis-shared/redis.module';
+import { PropertyAmenitiesModule } from './modules/property_amenities/property_amenities.module';
+import { LoyaltyProgramsModule } from './modules/loyalty_programs/loyalty_programs.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env/.env',
+      isGlobal: true,
     }),
     PrismaModule,
-    ConfigModule.forFeature(RedisConfig),
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (
-        configService: ConfigService,
-      ): Promise<CacheModuleOptions> => ({
-        store: 'store',
-        host: configService.get<string>('redis.host'),
-        port: configService.get<number>('redis.port'),
-        password: configService.get<string>('redis.password'),
-        db: configService.get<number>('redis.db'),
-      }),
-      inject: [ConfigService],
-    }),
+    RedisSharedModule,
     CommentsModule,
     EventsModule,
-    // HotelsModule,
+    HotelsModule,
     NotificationsModule,
-    // ReservationsModule,
+    ReservationModule,
     PaymentsModule,
     RoomModule,
     RolesModule,
@@ -57,10 +42,12 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     JwtModule,
     ProfilesModule,
+    PropertyAmenitiesModule,
+    LoyaltyProgramsModule,
     SocketModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [HttpModule],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

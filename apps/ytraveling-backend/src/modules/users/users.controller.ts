@@ -62,6 +62,15 @@ export class UserController {
     }
   }
 
+  @Get(':email')
+  findByEmail(@Param('email') email: string) {
+    try {
+      return this.userService.findOneByEmail(email);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
@@ -75,6 +84,33 @@ export class UserController {
   remove(@Param('id') id: string) {
     try {
       return this.userService.remove(+id);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Get('/roles/:id')
+  getByRoles(@Param('id') id: string) {
+    try {
+      return this.userService.getByRole(+id);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Put('status/:id')
+  updateStatus(@Param('id') id: string, @Body() status: boolean) {
+    try {
+      return this.userService.updateStatus(+id, status);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Get('export')
+  export(@Param('id') id: string) {
+    try {
+      return this.userService.export(+id);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

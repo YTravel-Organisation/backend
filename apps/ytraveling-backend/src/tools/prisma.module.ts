@@ -1,6 +1,6 @@
 // src/prisma/prisma.module.ts
 import { Module } from '@nestjs/common';
-import { PrismaService } from './database.config';
+import { PrismaService } from '../../../../lib/prisma-shared/prisma.service';
 
 @Module({
   providers: [PrismaService],

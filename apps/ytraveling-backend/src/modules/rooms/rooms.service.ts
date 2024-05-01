@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { CreateRoomDto, UpdateRoomDto } from './dto/room.dto';
 
 @Injectable()
@@ -59,10 +59,8 @@ export class RoomService {
 
   async update(RoomId: number, updateRoomDto: UpdateRoomDto) {
     try {
-      const {
-       hotelId,
-       ...rest
-      } = updateRoomDto;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { hotelId, ...rest } = updateRoomDto;
 
       return await this.prisma.room.update({
         where: { id: RoomId },

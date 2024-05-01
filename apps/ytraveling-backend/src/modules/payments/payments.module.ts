@@ -1,6 +1,6 @@
 // src/roles/roles.module.ts
 import { Module } from '@nestjs/common';
-import { PrismaService } from '../../tools/database.config';
+import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 

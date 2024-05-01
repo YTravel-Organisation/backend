@@ -1,6 +1,20 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { NotificationService } from './notifications.service';
-import { CreateNotificationDto, UpdateNotificationDto } from './dto/notification.dto';
+import {
+  CreateNotificationDto,
+  UpdateNotificationDto,
+} from './dto/notification.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Notifications')
@@ -16,7 +30,10 @@ export class NotificationController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+  async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
     return this.notificationService.findAll(page, limit);
   }
 
@@ -28,7 +45,10 @@ export class NotificationController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  async update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateNotificationDto: UpdateNotificationDto,
+  ) {
     return this.notificationService.update(+id, updateNotificationDto);
   }
 

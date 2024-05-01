@@ -6,12 +6,11 @@ export class MailerService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env.MAILER_HOST,
-      port: Number(process.env.MAILER_PORT),
-      secure: process.env.MAILER_SECURE === 'true',
+      host: process.env.MAILGUN_SMTP_SERVER,
+      port: Number(process.env.MAILGUN_SMTP_PORT),
       auth: {
-        user: process.env.MAILER_USER,
-        pass: process.env.MAILER_PASSWORD,
+        user: process.env.MAILGUN_SMTP_LOGIN,
+        pass: process.env.MAILGUN_SMTP_PASSWORD,
       },
     });
   }

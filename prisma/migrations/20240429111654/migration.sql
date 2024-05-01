@@ -2,7 +2,7 @@
 CREATE TYPE "LogsType" AS ENUM ('INFO', 'WARNING', 'ERROR', 'SUCCESS');
 
 -- CreateEnum
-CREATE TYPE "MethodPayment" AS ENUM ('CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'PAYPAL', 'BITCOIN', 'OTHER');
+CREATE TYPE "MethodPayment" AS ENUM ('CREDIT_CARD', 'DEBIT_CARD', 'PAYPAL', 'OTHER');
 
 -- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID', 'CANCELLED', 'REFUNDED');
@@ -26,7 +26,7 @@ CREATE TYPE "ReservationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'C
 CREATE TYPE "TransportType" AS ENUM ('BUS', 'TRAIN', 'FLIGHT', 'SHIP', 'FEET');
 
 -- CreateEnum
-CREATE TYPE "AvailabilityStatus" AS ENUM ('AVAILABLE', 'UNAVAILABLE', 'CANCELLED', 'VALIDATED');
+CREATE TYPE "AvailabilityStatus" AS ENUM ('UNAVAILABLE', 'MAINTENANCE');
 
 -- CreateEnum
 CREATE TYPE "NotificationType" AS ENUM ('INFO', 'WARNING', 'ERROR', 'SUCCESS');
@@ -113,7 +113,7 @@ CREATE TABLE "transports" (
     "id" SERIAL NOT NULL,
     "transportType" "TransportType" NOT NULL,
     "price" BIGINT NOT NULL,
-    "travelTime" TIMESTAMP(3) NOT NULL,
+    "travelTime" INTEGER NOT NULL,
     "departure" TEXT NOT NULL,
     "arrival" TEXT NOT NULL,
     "occupancy" INTEGER NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE "property_amenities" (
     "kitchen" BOOLEAN NOT NULL,
     "bathroom" BIGINT NOT NULL,
     "bed" TEXT[],
-    "communication" TEXT NOT NULL,
+    "communication" TEXT[],
     "accessible" BOOLEAN NOT NULL,
     "balcony" BOOLEAN NOT NULL,
     "parking" BOOLEAN NOT NULL,
@@ -144,8 +144,9 @@ CREATE TABLE "property_amenities" (
 );
 
 -- CreateTable
-CREATE TABLE "user" (
+CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
+    "profileId" INTEGER,
     "roleId" INTEGER,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -154,7 +155,7 @@ CREATE TABLE "user" (
     "verificationToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -241,7 +242,7 @@ CREATE TABLE "hotels" (
     "address" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "website" TEXT,
-    "phoneNumber" TEXT NOT NULL,
+    "phoneNumber" TEXT[],
     "rating" DECIMAL(65,30) NOT NULL,
     "verified" BOOLEAN NOT NULL DEFAULT false,
     "commentsId" INTEGER[],
@@ -250,7 +251,7 @@ CREATE TABLE "hotels" (
     "longitude" DECIMAL(65,30) NOT NULL,
     "latitude" DECIMAL(65,30) NOT NULL,
     "faq" TEXT[],
-    "paymentMethod" "MethodPayment" NOT NULL,
+    "paymentMethod" "MethodPayment"[],
     "otherInformation" TEXT[],
 
     CONSTRAINT "hotels_pkey" PRIMARY KEY ("id")
@@ -273,13 +274,16 @@ CREATE TABLE "logs" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_verificationToken_key" ON "user"("verificationToken");
+CREATE UNIQUE INDEX "users_verificationToken_key" ON "users"("verificationToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "profiles_userId_key" ON "profiles"("userId");
 
 -- AddForeignKey
-ALTER TABLE "loyalty_programs" ADD CONSTRAINT "loyalty_programs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "loyalty_programs" ADD CONSTRAINT "loyalty_programs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "rooms" ADD CONSTRAINT "rooms_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -288,7 +292,7 @@ ALTER TABLE "rooms" ADD CONSTRAINT "rooms_hotelId_fkey" FOREIGN KEY ("hotelId") 
 ALTER TABLE "events" ADD CONSTRAINT "events_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "hotels"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reservations" ADD CONSTRAINT "reservations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reservations" ADD CONSTRAINT "reservations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "reservations" ADD CONSTRAINT "reservations_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -306,7 +310,10 @@ ALTER TABLE "reservations" ADD CONSTRAINT "reservations_transportId_fkey" FOREIG
 ALTER TABLE "property_amenities" ADD CONSTRAINT "property_amenities_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user" ADD CONSTRAINT "user_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "profiles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "availabilities" ADD CONSTRAINT "availabilities_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -315,10 +322,10 @@ ALTER TABLE "availabilities" ADD CONSTRAINT "availabilities_roomId_fkey" FOREIGN
 ALTER TABLE "availabilities" ADD CONSTRAINT "availabilities_reservationId_fkey" FOREIGN KEY ("reservationId") REFERENCES "reservations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "notifications" ADD CONSTRAINT "notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "notifications" ADD CONSTRAINT "notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "comments" ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "comments" ADD CONSTRAINT "comments_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "rooms"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -330,13 +337,10 @@ ALTER TABLE "comments" ADD CONSTRAINT "comments_hotelId_fkey" FOREIGN KEY ("hote
 ALTER TABLE "comments" ADD CONSTRAINT "comments_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "profiles" ADD CONSTRAINT "profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "payments" ADD CONSTRAINT "payments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "payments" ADD CONSTRAINT "payments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "hotels" ADD CONSTRAINT "hotels_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "hotels" ADD CONSTRAINT "hotels_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "logs" ADD CONSTRAINT "logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "logs" ADD CONSTRAINT "logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
