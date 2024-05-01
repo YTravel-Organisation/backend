@@ -5,7 +5,7 @@ import { PrismaModule } from '../../../lib/prisma-shared/prisma.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
-// import { ReservationsModule } from './reservations/reservations.module';
+import { ReservationModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomModule } from './modules/rooms/rooms.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
@@ -33,7 +33,7 @@ import { LoyaltyProgramsModule } from './modules/loyalty_programs/loyalty_progra
     EventsModule,
     HotelsModule,
     NotificationsModule,
-    // ReservationsModule,
+    ReservationModule,
     PaymentsModule,
     RoomModule,
     RolesModule,
