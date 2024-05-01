@@ -10,10 +10,14 @@ import {
   UpdateReservationDto,
   BookingType,
 } from './dto/reservation.dto';
+import { NotificationService } from '../notifications/notifications.service';
 
 @Injectable()
 export class ReservationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationService: NotificationService,
+  ) {}
 
   private validateDate(startDate: Date, endDate: Date) {
     if (startDate > endDate) {
@@ -66,7 +70,7 @@ export class ReservationService {
         }
       }
 
-      await this.prisma.reservation.create({
+      const response = await this.prisma.reservation.create({
         data: {
           user: { connect: { id: userId } },
           ...toot,
@@ -74,6 +78,15 @@ export class ReservationService {
           bookingType: bookingType,
         },
       });
+
+      if (response) {
+        this.notificationService.create({
+          userId: userId,
+          type: 'SUCCESS',
+          title: 'Réservation confirmée',
+          message: `Votre réservation avec le numéro ${response.uniqueBookingCode} a été confirmée avec succès`,
+        });
+      }
 
       return 'Reservation created successfully';
     } catch (error) {
@@ -157,7 +170,7 @@ export class ReservationService {
         }
       }
 
-      await this.prisma.reservation.update({
+      const response = await this.prisma.reservation.update({
         where: { id: reservationId },
         data: {
           user: { connect: { id: userId } },
@@ -165,6 +178,15 @@ export class ReservationService {
           ...rest,
         },
       });
+
+      if (response) {
+        this.notificationService.create({
+          userId: userId,
+          type: 'SUCCESS',
+          title: 'Réservation modifiée',
+          message: `Votre réservation avec le numéro ${response.uniqueBookingCode} a été modifiée avec succès`,
+        });
+      }
 
       return 'Reservation updated successfully';
     } catch (error) {
@@ -183,7 +205,16 @@ export class ReservationService {
         throw new NotFoundException('No reservation found');
       }
 
-      await this.prisma.reservation.delete({ where: { id } });
+      const response = await this.prisma.reservation.delete({ where: { id } });
+
+      if (response) {
+        this.notificationService.create({
+          userId: reservation.userId,
+          type: 'SUCCESS',
+          title: 'Réservation annulée',
+          message: `Votre réservation avec le numéro ${reservation.uniqueBookingCode} a été annulée avec succès`,
+        });
+      }
 
       return 'Reservation deleted successfully';
     } catch (error) {

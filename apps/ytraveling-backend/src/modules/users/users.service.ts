@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../lib/prisma-shared/prisma.service';
 import { EmailService } from '../email/email.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { NotificationService } from '../notifications/notifications.service';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 
@@ -10,6 +11,7 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private emailService: EmailService,
+    private notificationService: NotificationService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<string> {
@@ -56,13 +58,23 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
 
-    await this.prisma.user.update({
+    const response = await this.prisma.user.update({
       where: { id },
       data: {
         ...updateUserDto,
         password: hashedPassword,
       },
     });
+
+    if (response) {
+      this.notificationService.create({
+        userId: id,
+        type: 'SUCCESS',
+        title: 'Utilisateur mis à jour',
+        message: 'Vos informations ont été mises à jour avec succès',
+      });
+    }
+
     return 'UserUpdated';
   }
 
